@@ -1,9 +1,12 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hackbourak/Shared/SharedFunctions.dart';
 import 'package:hackbourak/screens/EventList.dart';
+import 'package:hackbourak/screens/Loading.dart';
 import 'package:hackbourak/screens/RestuarantCard.dart';
 import 'package:location/location.dart';
 
@@ -25,13 +28,24 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
 
   String _mapStyle = "";
 
+  bool panelOpen = false;
+
   bool Located = true;
 
   bool rebuild = true;
 
   Location _location = Location();
 
+  late LocationData currentLoc;
+
   Set<Marker> markers = Set();
+
+  GeoPoint markerPoint = GeoPoint(36, 3);
+  int markerPlaces=0;
+  int markerInterested = 0;
+  String markerName = "";
+   bool markerClicked = false;
+
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(36.753229, 3.071947),
@@ -50,6 +64,9 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
     _controller = _cntlr;
     _controller.setMapStyle(_mapStyle);
     _location.onLocationChanged.listen((l) {
+
+      currentLoc = l;
+
       if (Located) {
         _controller.animateCamera(
           CameraUpdate.newCameraPosition(
@@ -104,8 +121,21 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
+          return Scaffold(
+
+              backgroundColor: const Color(0xFFE32929),
+              body: Container(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage('assets/loading_bg.png'),
+                  ),
+                ),
+                child: Center(
+                    child : CircularProgressIndicator(color: Colors.white,),
+
+                ),
+              ),
           );
         }
 
@@ -120,19 +150,7 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
                   position: LatLng(data['location'].latitude,data['location'].longitude),
 
                   onTap: (){
-                      print("le resto name is"+data['name']);
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return Dialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
 
-                              ),
-                              child: RestaurantCard(name : data['name'], location: data['location'], places: data['places'], interested: data['interested'],),
-                            );
-                          }
-                      );
                   }
               )
           );
@@ -141,20 +159,49 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
 
         return Scaffold(
 
-          body: ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(24.0),
-              topRight: Radius.circular(24.0),
-            ),
-
-            child: SlidingUpPanel(
+          body: SlidingUpPanel(
               controller: _pc,
               minHeight: MediaQuery.of(context).size.height*12/100,
               maxHeight: MediaQuery.of(context).size.height*90/100,
+
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(24.0),
                 topRight: Radius.circular(24.0),
               ),
+
+            collapsed: Container(
+              color: Colors.white,
+              child: GestureDetector(
+                onTap: (){
+                  if (_pc.isPanelOpen){
+                    _pc.close();
+                  }else{
+                    _pc.open();
+                  }
+
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset('assets/swipe_indicator.png'),
+                    SizedBox(height: 15,),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          //Icon(Icons.location_on_outlined, size: 35,color: Color(0xFFE32929)),
+                          Container(
+                              margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                              child: Text('A votre proximité', style: TextStyle(fontSize: 32, fontWeight: FontWeight.w500),)
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
 
               panel:
                 EventList(
@@ -166,17 +213,70 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
                       }
                     },
                 ),
-              body: rebuild ? GoogleMap(
+              body: rebuild ? Scaffold(
+                floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+                floatingActionButton: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
 
-                      mapType: MapType.normal,
-                      initialCameraPosition: _kGooglePlex,
-                      onMapCreated: _onMapCreated,
+                      FloatingActionButton(
+                        onPressed: () async {
+                          SharedFunctions.showLoaderDialog(context);
+                          await FirebaseAuth.instance.signOut();
+                          Navigator.pop(context);
+                          },
+                        backgroundColor: Colors.white,
+                        child: Icon(Icons.logout, color: Color(0xFF424866),),
+                      ),
+                      SizedBox(height: 10,),
+                      FloatingActionButton(
+                        backgroundColor: Colors.white,
+                        onPressed: () {},
+                        child: Icon(Icons.add, color: Color(0xFF424866),),
+                      ),
+                      SizedBox(height: 10,),
+                      FloatingActionButton(
+                        onPressed: () {},
+                        backgroundColor: Colors.white,
+                        child: Icon(Icons.assistant_outlined, color: Color(0xFF424866),),
+                      ),
+                      SizedBox(height: 10,),
+                      FloatingActionButton(
+                        onPressed: () async {
 
-                      myLocationEnabled: true,
-                      markers: markers,
-                    ) : CircularProgressIndicator(),
+                          if (currentLoc != null){
+                            var l = currentLoc;
+                            _controller.animateCamera(
+                                CameraUpdate.newCameraPosition(
+                                  CameraPosition(
+                                      target: LatLng(l.latitude!, l.longitude!), zoom: 15),
+                                )
+                            );
+                          }
+
+
+                        },
+                        backgroundColor: Colors.white,
+                        child: Icon(Icons.my_location, color: Color(0xFF424866)),
+                      )
+                    ],
                   ),
-          ),
+                ),
+                body: GoogleMap(
+
+                        mapType: MapType.normal,
+                        initialCameraPosition: _kGooglePlex,
+                        onMapCreated: _onMapCreated,
+                        myLocationButtonEnabled: false,
+                        myLocationEnabled: true,
+                        markers: markers,
+                      ),
+              ) : CircularProgressIndicator(),
+                  ),
+
 
 
 

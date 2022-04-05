@@ -50,7 +50,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
             color: Colors.grey.withOpacity(0.4),
             spreadRadius: 0,
             blurRadius: 10,
-            offset: Offset(-10, 4),
+            offset: Offset(0, 0),
           )
         ],
       ),

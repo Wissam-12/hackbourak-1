@@ -21,13 +21,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         .authStateChanges()
         .listen((User? user) {
       if (user == null) {
-        print('User is currently signed out!');
+        //print('User is currently signed out!');
         setState(() {
           _currentUser = user;
         });
 
       } else {
-        print('User is signed in!');
+        //print('User is signed in!');
         setState(() {
           _currentUser = user;
         });

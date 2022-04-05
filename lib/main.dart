@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hackbourak/SplashScreen.dart';
 import 'package:hackbourak/screens/RestPage.dart';
 import 'package:hackbourak/screens/WelcomeScreen.dart';
 
@@ -9,11 +10,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+
+
+
   runApp(MyApp());
+
 }
 
 class MyApp extends StatelessWidget {
@@ -27,7 +28,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const WelcomeScreen(),
+      home: FutureBuilder(
+        future: Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return WelcomeScreen();
+          }
+          return SplashScreen();
+        },
+      )
     );
   }
 }

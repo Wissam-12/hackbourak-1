@@ -1,16 +1,24 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hackbourak/screens/Loading.dart';
+import 'package:hackbourak/SplashScreen.dart';
+
 import 'package:hackbourak/screens/RestPage.dart';
+
+import 'package:hackbourak/screens/Vousetes.dart';
+import 'package:hackbourak/screens/WelcomeScreen.dart';
+
 import 'firebase_options.dart';
 import 'screens/signin.dart';
 import 'screens/organisation.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+
+
+
   runApp(MyApp());
+
 }
 
 class MyApp extends StatelessWidget {
@@ -21,6 +29,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Hackbourak',
+
+      debugShowCheckedModeBanner: false,
+
       theme: ThemeData(
         fontFamily: 'Product Sans',
         primaryColor: Colors.white,
@@ -35,7 +46,18 @@ class MyApp extends StatelessWidget {
           bodyText1: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Color(0xFFE32929),),
         ),
       ),
-      home: SigninPage(),
+
+      home: FutureBuilder(
+        future: Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return WelcomeScreen();
+          }
+          return SplashScreen();
+        },
+      )
     );
   }
 }
@@ -50,9 +72,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   void _accessMap() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => RestPage()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => RestPage()));
   }
 
   @override
@@ -60,14 +82,24 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {
+                  FirebaseAuth.instance.signOut();
+                },
+                child: Icon(
+                  Icons.logout,
+                  size: 26.0,
+                ),
+              )),
+        ],
       ),
       body: Center(
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-
-          ],
+          children: <Widget>[],
         ),
       ),
       floatingActionButton: FloatingActionButton(

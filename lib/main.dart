@@ -5,12 +5,13 @@ import 'package:hackbourak/screens/Loading.dart';
 import 'package:hackbourak/SplashScreen.dart';
 
 import 'package:hackbourak/screens/RestPage.dart';
+
 import 'package:hackbourak/screens/Vousetes.dart';
 import 'package:hackbourak/screens/WelcomeScreen.dart';
 
-import 'package:firebase_auth/firebase_auth.dart';
-
 import 'firebase_options.dart';
+import 'screens/signin.dart';
+import 'screens/organisation.dart';
 
 void main() async {
 
@@ -27,11 +28,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Hackbourak',
+
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        fontFamily: 'Product Sans',
+        primaryColor: Colors.white,
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          elevation: 0,
+          foregroundColor: Colors.white,
+        ),
+        accentColor: Color(0xFFE32929),
+        textTheme: TextTheme(
+          headline1: TextStyle(fontSize: 22.0, color: Color(0xFFE32929),),
+          headline2: TextStyle(fontSize: 36.0, fontWeight: FontWeight.w700, color: Color(0xFF343434),),
+          bodyText1: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Color(0xFFE32929),),
+        ),
       ),
+
       home: FutureBuilder(
         future: Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,

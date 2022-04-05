@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hackbourak/screens/Loading.dart';
 import 'package:hackbourak/screens/RestPage.dart';
+import 'package:hackbourak/screens/Vousetes.dart';
 import 'package:hackbourak/screens/WelcomeScreen.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -23,11 +25,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const WelcomeScreen(),
+      home: const Vousetes(),
     );
   }
 }
@@ -42,9 +45,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   void _accessMap() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => RestPage()));
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => RestPage()));
   }
 
   @override
@@ -63,17 +66,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   Icons.logout,
                   size: 26.0,
                 ),
-              )
-          ),
+              )),
         ],
       ),
       body: Center(
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-
-          ],
+          children: <Widget>[],
         ),
       ),
       floatingActionButton: FloatingActionButton(

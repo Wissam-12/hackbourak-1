@@ -1,9 +1,12 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hackbourak/screens/SignInScreen.dart';
+import '../Shared/SharedFunctions.dart';
 
 import '../main.dart';
 
@@ -16,20 +19,12 @@ class InscriptionScreen extends StatefulWidget {
 
 class _InscriptionScreenState extends State<InscriptionScreen> {
 
-  void ShowingToast(String message){
-    Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0
-    );
-  }
+
 
   String _email = "";
   String _password = "";
+  bool isSignIn = false;
+
 
   Future<void> _signUpMailPassword() async {
     try {
@@ -40,21 +35,30 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        ShowingToast('The password provided is too weak.');
+        SharedFunctions.showingToast('The password provided is too weak.');
         print(e.code);
       } else if (e.code == 'email-already-in-use') {
-        ShowingToast('The account already exists for that email.');
+        SharedFunctions.showingToast('The account already exists for that email.');
         print(e.code);
       }
     } catch (e) {
-      ShowingToast(e.toString());
+      SharedFunctions.showingToast(e.toString());
       print(e);
     }
   }
 
+  void goToSignIn(){
+    setState(() {
+      isSignIn = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+
+
+
+    return isSignIn ? SignInScreen() : Scaffold(
       body: Container(
         child: Center(
           child: Column(
@@ -110,6 +114,11 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
               ElevatedButton(
                 onPressed: _signUpMailPassword,
                 child: Text('Suivant'),
+              ),
+
+              ElevatedButton(
+                onPressed: goToSignIn,
+                child: Text('SignIn'),
               ),
 
             ],

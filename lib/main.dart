@@ -1,8 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hackbourak/screens/RestPage.dart';
-
 import 'firebase_options.dart';
+import 'screens/signin.dart';
+import 'screens/organisation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,11 +20,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Hackbourak',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        fontFamily: 'Product Sans',
+        primaryColor: Colors.white,
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          elevation: 0,
+          foregroundColor: Colors.white,
+        ),
+        accentColor: Color(0xFFE32929),
+        textTheme: TextTheme(
+          headline1: TextStyle(fontSize: 22.0, color: Color(0xFFE32929),),
+          headline2: TextStyle(fontSize: 36.0, fontWeight: FontWeight.w700, color: Color(0xFF343434),),
+          bodyText1: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Color(0xFFE32929),),
+        ),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: SigninPage(),
     );
   }
 }

@@ -91,7 +91,12 @@ class _RestaurantSmallDetailsState extends State<RestaurantSmallDetails> {
         Row(
           children: [
             SizedBox(width: 30,),
-            Image.asset('assets/org.png'),
+            FutureBuilder(future: _getType(docRef), initialData: "Chargement du type...",
+                builder: (BuildContext context, AsyncSnapshot<String> text){
+                  return Image.asset(text.data==null ? "assets/org.png" : (text.data! == "Individu" ? "assets/indiv.png" : "assets/org.png"));
+                }
+            ),
+
             SizedBox(width: 10,),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

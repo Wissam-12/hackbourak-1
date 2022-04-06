@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hackbourak/screens/EventDetails.dart';
 import 'package:hackbourak/screens/Loading.dart';
 import 'package:hackbourak/SplashScreen.dart';
 
@@ -14,11 +15,7 @@ import 'screens/signin.dart';
 import 'screens/organisation.dart';
 
 void main() async {
-
-
-
   runApp(MyApp());
-
 }
 
 class MyApp extends StatelessWidget {
@@ -30,9 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Hackbourak',
-
         debugShowCheckedModeBanner: false,
-
         theme: ThemeData(
           fontFamily: 'Product Sans',
           primaryColor: Colors.white,
@@ -42,6 +37,23 @@ class MyApp extends StatelessWidget {
           ),
           accentColor: Color(0xFFE32929),
           textTheme: TextTheme(
+            headline1: TextStyle(
+              fontSize: 22.0,
+              color: Color(0xFFE32929),
+            ),
+            headline2: TextStyle(
+              fontSize: 36.0,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF343434),
+            ),
+            bodyText1: TextStyle(
+              fontSize: 14.0,
+              fontWeight: FontWeight.w400,
+              color: Color(0xFFE32929),
+            ),
+          ),
+        ),
+       
             headline1: TextStyle(fontSize: 22.0, color: Color(0xFFE32929),),
             headline2: TextStyle(fontSize: 36.0,
               fontWeight: FontWeight.w700,
@@ -52,7 +64,17 @@ class MyApp extends StatelessWidget {
           ),
         ),
 
-        home: MyHomePage(title: "hey",)
+        home: FutureBuilder(
+          future: Firebase.initializeApp(
+            options: DefaultFirebaseOptions.currentPlatform,
+          ),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return EventDetails();
+            }
+            return SplashScreen();
+          },
+        ));
     );
   }
 }

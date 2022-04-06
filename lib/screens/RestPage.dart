@@ -11,6 +11,7 @@ import 'package:hackbourak/screens/Loading.dart';
 import 'package:hackbourak/screens/RestaurantSmallDetails.dart';
 import 'package:hackbourak/screens/RestuarantCard.dart';
 import 'package:hackbourak/screens/WelcomeScreen.dart';
+import 'package:hackbourak/screens/new_event.dart';
 import 'package:location/location.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
@@ -180,7 +181,7 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
                                 topLeft: Radius.circular(24.0),
                                 topRight: Radius.circular(24.0),
                               ),
-                              child: SizedBox(height : MediaQuery.of(context).size.height/100*40,child: RestaurantSmallDetails(timestamp: data['date'],docRef: data['owner'],name: data['name'], location: data['location'], places: data['places'], interested: data['interested']))),
+                              child: SizedBox(height : MediaQuery.of(context).size.height/100*45,child: RestaurantSmallDetails(timestamp: data['date'],docRef: data['owner'],name: data['name'], location: data['location'], places: data['places'], interested: data['interested']))),
                     );
                   }
               )
@@ -282,7 +283,9 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
                         SizedBox(height: 10,),
                         FloatingActionButton(
                           backgroundColor: Colors.white,
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>NewEventPage()));
+                          },
                           child: Icon(Icons.add, color: Color(0xFF424866),),
                         ),
                         SizedBox(height: 10,),

@@ -55,13 +55,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
 
-        accentColor: Color(0xFFE32929),
-        textTheme: TextTheme(
-          headline1: TextStyle(fontSize: 22.0, color: Color(0xFFE32929),),
-          headline2: TextStyle(fontSize: 36.0, fontWeight: FontWeight.w700, color: Color(0xFF343434),),
-          bodyText1: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Color(0xFFE32929),),
-        ),
-      ),=
+
 
         home: MyHomePage(title: 'hey',),
     );

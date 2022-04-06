@@ -4,22 +4,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocode/geocode.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:hackbourak/screens/EventDetails.dart';
 
 class RestaurantSmallDetails extends StatefulWidget {
-  RestaurantSmallDetails({Key? key, required this.docRef,required this.name, required this.location, required this.places, required this.interested}) : super(key: key);
+  RestaurantSmallDetails({Key? key, required this.timestamp, required this.docRef,required this.name, required this.location, required this.places, required this.interested}) : super(key: key);
 
   String name;
   GeoPoint location ;
   int places;
   int interested;
   String docRef;
+  Timestamp timestamp;
   @override
-  State<RestaurantSmallDetails> createState() => _RestaurantSmallDetailsState(docRef : docRef,name : name, location: location, places: places, interested: interested);
+  State<RestaurantSmallDetails> createState() => _RestaurantSmallDetailsState(timestamp: timestamp, docRef : docRef,name : name, location: location, places: places, interested: interested);
 }
 
 class _RestaurantSmallDetailsState extends State<RestaurantSmallDetails> {
 
-  _RestaurantSmallDetailsState({required this.docRef, required this.name, required this.location, required this.places, required this.interested});
+  _RestaurantSmallDetailsState({required this.timestamp,required this.docRef, required this.name, required this.location, required this.places, required this.interested});
 
   String docRef;
   int places;
@@ -27,6 +29,7 @@ class _RestaurantSmallDetailsState extends State<RestaurantSmallDetails> {
 
   String name= "";
   GeoPoint location ;
+  Timestamp timestamp;
 
   Future<String> _getAddress(GeoPoint g) async {
     if (g.latitude == null || g.longitude == null) return "";
@@ -108,7 +111,7 @@ class _RestaurantSmallDetailsState extends State<RestaurantSmallDetails> {
 
           ],
         ),
-        SizedBox(height: 15,),
+        SizedBox(height: 5,),
         Container(
           margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
           padding: EdgeInsets.all(10),
@@ -147,7 +150,7 @@ class _RestaurantSmallDetailsState extends State<RestaurantSmallDetails> {
                     ),
                     child: IconButton(
                       onPressed: (){
-
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>EventDetails(name: name, location: location, docRef: docRef, interested: interested, timestamp: timestamp, places: places,)));
                       },
                       icon: Icon(Icons.keyboard_arrow_right), color: Colors.white,),
                   )

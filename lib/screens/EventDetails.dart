@@ -1,13 +1,81 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geocode/geocode.dart';
 
 class EventDetails extends StatefulWidget {
-  const EventDetails({Key? key}) : super(key: key);
+  EventDetails({Key? key, required this.docRef,required this.timestamp,required this.name, required this.location, required this.places, required this.interested}) : super(key: key);
+
+  String name;
+  GeoPoint location ;
+  int places;
+  int interested;
+  Timestamp timestamp;
+  String docRef;
 
   @override
-  State<EventDetails> createState() => _EventDetailsState();
+  State<EventDetails> createState() => _EventDetailsState(docRef: docRef, timestamp: timestamp, name : name, location: location, places: places, interested: interested);
 }
 
 class _EventDetailsState extends State<EventDetails> {
+  _EventDetailsState({required this.timestamp, required this.docRef, required this.name, required this.location, required this.places, required this.interested});
+
+  String name;
+  GeoPoint location ;
+  int places;
+  int interested;
+  Timestamp timestamp;
+  String docRef;
+
+  Future<String> _getAddress(GeoPoint g) async {
+    if (g.latitude == null || g.longitude == null) return "";
+    GeoCode geoCode = GeoCode();
+    Address address = await geoCode.reverseGeocoding(latitude: g.latitude, longitude: g.longitude);
+
+
+
+    return "${address.streetAddress}, ${address.city}";
+  }
+
+  bool expaned = true;
+
+  Future<String> _getName(String id) async {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+    String name = '';
+
+    await users.doc(id)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        name = documentSnapshot['name'];
+        print(name);
+      }else{
+        print('not found');
+      }
+    });
+
+    return name;
+  }
+
+  Future<String> _getType(String id) async {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+    bool name = false;
+
+    await users.doc(id)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        name = documentSnapshot['isOrg'];
+        print(name);
+      }else{
+        print('not found');
+      }
+    });
+
+    return name ? "Organisation" : "Individu";
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -85,8 +153,11 @@ class _EventDetailsState extends State<EventDetails> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Mataam Errahma',
+
+
+
+                Text(
+                  name,
                   style: TextStyle(
                       color: Color(0xFFE32929),
                       fontWeight: FontWeight.w700,
@@ -96,21 +167,25 @@ class _EventDetailsState extends State<EventDetails> {
                 ListTile(
                   contentPadding: const EdgeInsets.all(0.0),
                   leading: Image.asset('assets/img/resto_avatar.png'),
-                  title: const Text(
-                    'Une chorba pour tous',
-                    style: TextStyle(
-                        color: Color(0xFF1E1E1E),
+                  title:
+                  FutureBuilder(future: _getName(docRef), initialData: "Chargement du nom...",
+                      builder: (BuildContext context, AsyncSnapshot<String> text){
+                        return Text(text.data==null ? "" : text.data!, style: TextStyle(
+                            color: Color(0xFF1E1E1E),
                         fontFamily: 'Poppins',
                         fontWeight: FontWeight.w600,
-                        fontSize: 18),
+                        fontSize: 18),);
+                      }
                   ),
-                  subtitle: const Text(
-                    'Association',
-                    style: TextStyle(
-                        color: Color(0xFF1E1E1E),
+                  subtitle:
+                  FutureBuilder(future: _getType(docRef), initialData: "Chargement du type...",
+                      builder: (BuildContext context, AsyncSnapshot<String> text){
+                        return Text(text.data==null ? "" : text.data!, style: TextStyle(
+                            color: Color(0xFF1E1E1E),
                         fontFamily: 'Poppins',
                         fontWeight: FontWeight.w500,
-                        fontSize: 14),
+                        fontSize: 14),);
+                      }
                   ),
                 ),
                 //A propos ===================================================================
@@ -192,8 +267,8 @@ class _EventDetailsState extends State<EventDetails> {
                         fontWeight: FontWeight.w400,
                         fontSize: 16),
                   ),
-                  subtitle: const Text(
-                    'Jeudi 10 Janvier, 19:30',
+                  subtitle: Text(
+                    DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch).toString(),
                     style: TextStyle(
                         color: Color(0xFF1E1E1E),
                         fontFamily: 'Poppins',
@@ -223,15 +298,19 @@ class _EventDetailsState extends State<EventDetails> {
                         fontWeight: FontWeight.w400,
                         fontSize: 16),
                   ),
-                  subtitle: const Text(
-                    'El Harrach, Alger',
-                    style: TextStyle(
-                        color: Color(0xFF1E1E1E),
-                        fontFamily: 'Poppins',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16),
-                  ),
-                ),
+                  subtitle:
+                  FutureBuilder(future: _getAddress(location), initialData: "Chargement de l'adresse...",
+                      builder: (BuildContext context, AsyncSnapshot<String> text){
+                        return Text(text.data==null ? "" : text.data!, style: TextStyle(
+                            color: Color(0xFF1E1E1E),
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16
+                        ));
+
+                      }
+                  )),
+
                 //Nombre de plats disponibles ==========================================================
                 ListTile(
                   contentPadding: EdgeInsets.zero,
@@ -254,8 +333,8 @@ class _EventDetailsState extends State<EventDetails> {
                         fontWeight: FontWeight.w400,
                         fontSize: 16),
                   ),
-                  subtitle: const Text(
-                    '50 plats',
+                  subtitle: Text(
+                    places.toString()+' plats',
                     style: TextStyle(
                         color: Color(0xFF1E1E1E),
                         fontFamily: 'Poppins',
@@ -316,8 +395,8 @@ class _EventDetailsState extends State<EventDetails> {
                         fontWeight: FontWeight.w400,
                         fontSize: 16),
                   ),
-                  subtitle: const Text(
-                    '20 personnes',
+                  subtitle: Text(
+                    interested.toString()+' personnes',
                     style: TextStyle(
                         color: Color(0xFF1E1E1E),
                         fontFamily: 'Poppins',

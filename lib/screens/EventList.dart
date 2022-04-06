@@ -72,7 +72,7 @@ class _EventListState extends State<EventList> {
                                 //Icon(Icons.location_on_outlined, size: 35,color: Color(0xFFE32929)),
                                 Container(
                                     margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                    child: Text('A votre proximité', style: TextStyle(fontSize: 32, fontWeight: FontWeight.w500),)
+                                    child: Text('A proximité de votre localisation', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),)
                                 ),
                               ],
                             ),

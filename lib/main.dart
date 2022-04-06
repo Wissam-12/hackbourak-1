@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         title: 'Hackbourak',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          fontFamily: 'Product Sans',
+          fontFamily: 'Poppins',
           primaryColor: Colors.white,
           floatingActionButtonTheme: FloatingActionButtonThemeData(
             elevation: 0,
@@ -56,17 +56,7 @@ class MyApp extends StatelessWidget {
        
 
 
-        home: FutureBuilder(
-          future: Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform,
-          ),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return EventDetails();
-            }
-            return SplashScreen();
-          },
-        )
+        home: MyHomePage(title: 'hey',),
     );
 
   }

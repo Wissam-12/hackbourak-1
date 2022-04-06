@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocode/geocode.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:hackbourak/screens/EventDetails.dart';
 
 class RestaurantCard extends StatefulWidget {
   RestaurantCard({Key? key, required this.docRef,required this.timestamp,required this.name, required this.location, required this.places, required this.interested}) : super(key: key);
@@ -110,7 +111,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
                 children: [
                   FutureBuilder(future: _getName(docRef), initialData: "Chargement du nom...",
                       builder: (BuildContext context, AsyncSnapshot<String> text){
-                        return Text(text.data==null ? "" : text.data!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),);
+                        return Text(text.data==null ? "" : text.data!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),);
                       }
                   ),
                   FutureBuilder(future: _getType(docRef), initialData: "Chargement du type...",
@@ -124,7 +125,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
             ],
           ),
 
-          SizedBox(height: 15,),
+          SizedBox(height: 5,),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -170,7 +171,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 5,),
+                  SizedBox(height: 2,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -206,7 +207,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
 
                     ],
                   ),
-                  SizedBox(height: 5,),
+                  SizedBox(height: 2,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -246,7 +247,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
                       Container(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                            onPressed: (){},
+                            onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>EventDetails(name: name, location: location, docRef: docRef, interested: interested, timestamp: timestamp, places: places,)));},
 
                             child: Container(
 

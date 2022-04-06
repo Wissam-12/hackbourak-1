@@ -169,8 +169,8 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
 
                       shape: RoundedRectangleBorder(
                         borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(24.0),
-                          topRight: Radius.circular(24.0),
+                          topLeft: Radius.circular(30.0),
+                          topRight: Radius.circular(30.0),
                         ),
                       ),
                       context: context,
@@ -180,7 +180,7 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
                                 topLeft: Radius.circular(24.0),
                                 topRight: Radius.circular(24.0),
                               ),
-                              child: SizedBox(height : MediaQuery.of(context).size.height/100*40,child: RestaurantSmallDetails(docRef: data['owner'],name: data['name'], location: data['location'], places: data['places'], interested: data['interested']))),
+                              child: SizedBox(height : MediaQuery.of(context).size.height/100*40,child: RestaurantSmallDetails(timestamp: data['date'],docRef: data['owner'],name: data['name'], location: data['location'], places: data['places'], interested: data['interested']))),
                     );
                   }
               )
@@ -229,7 +229,7 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
                               //Icon(Icons.location_on_outlined, size: 35,color: Color(0xFFE32929)),
                               Container(
                                   margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                  child: Text('A votre proximité', style: TextStyle(fontSize: 32, fontWeight: FontWeight.w500),)
+                                  child: Text('A proximité de votre localisation', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),)
                               ),
                             ],
                           ),

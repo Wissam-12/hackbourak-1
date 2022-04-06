@@ -203,8 +203,8 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
 
               collapsed: ClipRRect(
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(24.0),
-                  topRight: Radius.circular(24.0),
+                  topLeft: Radius.circular(30.0),
+                  topRight: Radius.circular(30.0),
                 ),
                 child: Container(
                   color: Colors.white,
@@ -234,7 +234,8 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
                               ),
                             ],
                           ),
-                        )
+                        ),
+                        SizedBox(height: 15,),
                       ],
                     ),
                   ),
@@ -255,6 +256,7 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
                             _pc.open();
                           }
                         },
+                      isEvents: true,
                     ),
                   ),
                 body: rebuild ? Scaffold(
@@ -285,7 +287,16 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
                         ),
                         SizedBox(height: 10,),
                         FloatingActionButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>EventList(
+                                clickHandler: (){
+                                  Navigator.pop(context);
+                            },
+                                isEvents: false)
+                            )
+                            );
+                          },
+
                           backgroundColor: Colors.white,
                           child: Icon(Icons.assistant_outlined, color: Color(0xFF424866),),
                         ),

@@ -7,7 +7,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:hackbourak/screens/EventDetails.dart';
 
 class RestaurantCard extends StatefulWidget {
-  RestaurantCard({Key? key, required this.docRef,required this.timestamp,required this.name, required this.location, required this.places, required this.interested}) : super(key: key);
+  RestaurantCard({Key? key, required this.eventRef, required this.docRef,required this.timestamp,required this.name, required this.location, required this.places, required this.interested}) : super(key: key);
 
   String name;
   GeoPoint location ;
@@ -15,15 +15,17 @@ class RestaurantCard extends StatefulWidget {
   int interested;
   Timestamp timestamp;
   String docRef;
+  String eventRef;
   @override
-  State<RestaurantCard> createState() => _RestaurantCardState(docRef: docRef, timestamp: timestamp, name : name, location: location, places: places, interested: interested);
+  State<RestaurantCard> createState() => _RestaurantCardState(eventRef : eventRef, docRef: docRef, timestamp: timestamp, name : name, location: location, places: places, interested: interested);
 }
 
 class _RestaurantCardState extends State<RestaurantCard> {
 
-  _RestaurantCardState({required this.timestamp, required this.docRef, required this.name, required this.location, required this.places, required this.interested});
+  _RestaurantCardState({required this.eventRef, required this.timestamp, required this.docRef, required this.name, required this.location, required this.places, required this.interested});
 
   int places;
+  String eventRef;
   int interested;
   Timestamp timestamp;
   String docRef;
@@ -35,6 +37,21 @@ class _RestaurantCardState extends State<RestaurantCard> {
   Future<String> _getAddress(GeoPoint g) async {
     if (g.latitude == null || g.longitude == null) return "";
     GeoCode geoCode = GeoCode();
+
+    if (eventRef!="") {
+      CollectionReference users = FirebaseFirestore.instance.collection(
+          'restos');
+      await users.doc(eventRef)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          g = documentSnapshot['location'];
+          print(g);
+        } else {
+          print('not found');
+        }
+      });
+    }
     Address address = await geoCode.reverseGeocoding(latitude: g.latitude, longitude: g.longitude);
 
 
@@ -42,22 +59,25 @@ class _RestaurantCardState extends State<RestaurantCard> {
     return "${address.streetAddress}, ${address.city}";
   }
 
-  Future<String> _getName(String id) async {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
+  Future<String> _getName(String id, String coll) async {
+    CollectionReference users = FirebaseFirestore.instance.collection(coll);
 
     String name = '';
 
-    await users.doc(id)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        name = documentSnapshot['name'];
-        print(name);
-      }else{
-        print('not found');
-      }
-    });
-
+    if (eventRef!="") {
+      await users.doc(id)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          name = documentSnapshot['name'];
+          print(name);
+        } else {
+          print('not found');
+        }
+      });
+    }else{
+      name = this.name;
+    }
     return name;
   }
 
@@ -113,7 +133,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  FutureBuilder(future: _getName(docRef), initialData: "Chargement du nom...",
+                  FutureBuilder(future: _getName(docRef, 'users'), initialData: "Chargement du nom...",
                       builder: (BuildContext context, AsyncSnapshot<String> text){
                         return Text(text.data==null ? "" : text.data!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),);
                       }
@@ -150,7 +170,14 @@ class _RestaurantCardState extends State<RestaurantCard> {
                     children: [
                       Container(
                         margin: EdgeInsets.all(10),
-                          child: Text(name, style: TextStyle(fontWeight: !expaned ? FontWeight.w500 : FontWeight.w700, fontSize: !expaned ? 20 : 25),)),
+                          child:
+
+                          FutureBuilder(future: _getName(eventRef, 'restos'), initialData: "Chargement du nom...",
+                              builder: (BuildContext context, AsyncSnapshot<String> text){
+                                return Text(text.data==null ? "" : text.data!, style: TextStyle(fontWeight: !expaned ? FontWeight.w500 : FontWeight.w700, fontSize: !expaned ? 20 : 25),);
+                              }
+                          ),
+                      ),
                     ],
                   ),
                 ],

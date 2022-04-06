@@ -12,6 +12,7 @@ class EventDetails extends StatefulWidget {
   Timestamp timestamp;
   String docRef;
 
+
   @override
   State<EventDetails> createState() => _EventDetailsState(docRef: docRef, timestamp: timestamp, name : name, location: location, places: places, interested: interested);
 }
@@ -129,22 +130,38 @@ class _EventDetailsState extends State<EventDetails> {
       backgroundColor: Colors.white,
       body: ListView(
         children: [
+
           Container(
             decoration: const BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage('assets/img/resto.png'),
-                    fit: BoxFit.fitWidth)),
-            child: Container(
-              margin: EdgeInsets.fromLTRB(
-                  0, MediaQuery.of(context).size.height / 4, 0, 0),
-              width: MediaQuery.of(context).size.width,
-              height: 35,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40)),
-              ),
+                    fit: BoxFit.fill)),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: (){Navigator.pop(context);},
+                      child : Container(
+                          padding: EdgeInsets.all(10),
+                          child: Icon(Icons.close, color: Colors.white, size: 35,)
+                      ),
+                    )
+                  ],
+                ),
+                Container(
+                  margin: EdgeInsets.fromLTRB(
+                      0, MediaQuery.of(context).size.height / 4, 0, 0),
+                  width: MediaQuery.of(context).size.width,
+                  height: 20,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(40),
+                        topRight: Radius.circular(40)),
+                  ),
+                ),
+              ],
             ),
           ),
           //Titre ==========================================================================

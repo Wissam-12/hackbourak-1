@@ -81,7 +81,7 @@ class _VousetesState extends State<Vousetes> {
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
-                            fontSize: 26,
+                            fontSize: 24,
                           ),
                         ),
                       ),

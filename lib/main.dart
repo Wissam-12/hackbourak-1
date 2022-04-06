@@ -4,6 +4,7 @@ import 'package:hackbourak/screens/RestPage.dart';
 import 'firebase_options.dart';
 import 'screens/signin.dart';
 import 'screens/organisation.dart';
+import 'screens/new_event.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
           bodyText1: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Color(0xFFE32929),),
         ),
       ),
-      home: SigninPage(),
+      home: NewEventPage(),
     );
   }
 }

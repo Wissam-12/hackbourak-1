@@ -43,7 +43,7 @@ class _NewEventPageState extends State<NewEventPage> {
                                                                     Align(
                                                                         alignment: Alignment.topRight,
                                                                         child: Container(
-                                                                            color: Colors.green,
+                                                                            color: Colors.white,
                                                                             child: IconButton(
                                                                                 onPressed: (){
                                                                                     Navigator.pop(context);

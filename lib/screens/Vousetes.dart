@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hackbourak/screens/connexion.dart';
+import 'package:hackbourak/screens/individu.dart';
+import 'package:hackbourak/screens/organisation.dart';
+import 'package:hackbourak/screens/signin.dart';
 
 class Vousetes extends StatefulWidget {
   const Vousetes({Key? key}) : super(key: key);
@@ -49,7 +53,7 @@ class _VousetesState extends State<Vousetes> {
                       margin: const EdgeInsets.symmetric(
                           vertical: 20.0, horizontal: 0.0),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => SigninPage()));},
                         child: const Text(
                           'Un individu',
                           style: TextStyle(
@@ -71,7 +75,7 @@ class _VousetesState extends State<Vousetes> {
                       margin: const EdgeInsets.symmetric(
                           vertical: 20.0, horizontal: 0.0),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => OrganisationInscPage()));},
                         child: const Text(
                           'Une organisation',
                           style: TextStyle(

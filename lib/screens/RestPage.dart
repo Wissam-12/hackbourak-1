@@ -193,7 +193,8 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
             body: SlidingUpPanel(
                 controller: _pc,
                 minHeight: MediaQuery.of(context).size.height*12/100,
-                maxHeight: MediaQuery.of(context).size.height*90/100,
+                maxHeight: MediaQuery.of(context).size.height*94/100,
+
 
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(24.0),
@@ -259,10 +260,10 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
                 body: rebuild ? Scaffold(
                   floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
                   floatingActionButton: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.fromLTRB(0,70,0,0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
 
                         FloatingActionButton(

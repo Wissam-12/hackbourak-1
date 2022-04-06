@@ -1,4 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hackbourak/screens/connexion.dart';
+
+import '../Shared/SharedFunctions.dart';
 // import 'package:file_picker/file_picker.dart';
 
 class OrganisationInscPage extends StatefulWidget {
@@ -14,6 +19,69 @@ class _OrganisationInscPageState extends State<OrganisationInscPage> {
   bool hidePassword = true;
   bool hidep = true;
   bool checked = false;
+
+  String _email="";
+  String _password1="";
+  String _password2="";
+  String _name="";
+  int _number=0;
+
+  Future<void> _signUpMailPassword() async {
+      try {
+
+          if (_password1 != _password2){
+              SharedFunctions.showingToast("Mots de passe non pas identiques");
+          }else{
+              if (_name==""){
+                  SharedFunctions.showingToast("Veuillez entrer votre nom");
+              }else{
+
+                          if (_number == 0){
+                              SharedFunctions.showingToast("Veuillez entrer votre numero de telephone");
+                          }else{
+                              SharedFunctions.showLoaderDialog(context);
+
+                              UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                                  email: _email,
+                                  password: _password1
+                              );
+
+                              FirebaseFirestore.instance.collection("users").doc(userCredential.user?.uid).set({
+                                  'password': _password1,
+                                  'name' : _name,
+                                  'phone' : _number,
+                                  'email' : _email,
+                                  'isOrg' : true,
+                              });
+
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                          }
+                      }
+
+
+          }
+
+
+
+      } on FirebaseAuthException catch (e) {
+          if (e.code == 'weak-password') {
+              SharedFunctions.showingToast('The password provided is too weak.');
+              print(e.code);
+          } else if (e.code == 'email-already-in-use') {
+              SharedFunctions.showingToast('The account already exists for that email.');
+              print(e.code);
+          }
+
+          Navigator.pop(context);
+      } catch (e) {
+          SharedFunctions.showingToast(e.toString());
+          print(e);
+
+          Navigator.pop(context);
+      }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,6 +140,9 @@ class _OrganisationInscPageState extends State<OrganisationInscPage> {
                                                         borderRadius: BorderRadius.circular(23.5)
                                                     ),
                                                 ),
+                                                onChanged: (v){
+                                                    _name = v;
+                                                },
                                             ),
                                             SizedBox(height: 10,),
                                             new TextFormField(
@@ -95,6 +166,9 @@ class _OrganisationInscPageState extends State<OrganisationInscPage> {
                                                         borderRadius: BorderRadius.circular(23.5)
                                                     ),
                                                 ),
+                                                onChanged: (v){
+                                                    _email = v;
+                                                },
                                             ),
                                             SizedBox(height: 10,),
                                             new TextFormField(
@@ -118,6 +192,9 @@ class _OrganisationInscPageState extends State<OrganisationInscPage> {
                                                         borderRadius: BorderRadius.circular(23.5)
                                                     ),
                                                 ),
+                                                onChanged: (v){
+                                                    _number = int.parse(v);
+                                                },
                                             ),
                                             SizedBox(height: 10,),
                                             Container(
@@ -187,6 +264,9 @@ class _OrganisationInscPageState extends State<OrganisationInscPage> {
                                                         ),
                                                     ),
                                                 ),
+                                                onChanged: (v){
+                                                    _password1 = v;
+                                                },
                                             ),
                                             SizedBox(height: 10,),
                                             new TextFormField(
@@ -226,6 +306,9 @@ class _OrganisationInscPageState extends State<OrganisationInscPage> {
                                                         ),
                                                     ),
                                                 ),
+                                                onChanged: (v){
+                                                    _password2 = v;
+                                                },
                                             ),
                                             SizedBox(height: 10,),
                                             Container(
@@ -261,11 +344,7 @@ class _OrganisationInscPageState extends State<OrganisationInscPage> {
                                                     horizontal: 20,
                                                 ),
                                                 onPressed: checked ? () {
-                                                    // Navigator.push(
-                                                    //     context,
-                                                    //     MaterialPageRoute(builder: (context) => SigninPage()
-                                                    //     ),
-                                                    // );
+                                                    _signUpMailPassword();
                                                 } : null,
                                                 child: Text(
                                                     "Inscription",
@@ -278,6 +357,24 @@ class _OrganisationInscPageState extends State<OrganisationInscPage> {
                                                 ),
                                                 color: !checked ? Color(0xFF757575) : Color(0xFFE32929),
                                                 shape: StadiumBorder(),
+                                            ),
+                                            SizedBox(height: 20,),
+                                            TextButton(
+                                                onPressed: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(builder: (context) => ConnexionPage()
+                                                        ),
+                                                    );
+                                                },
+                                                child: Text(
+                                                    "Vous avez déjà un compte?\n Connectez-vous!",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontSize: 20,
+                                                        color: Theme.of(context).accentColor,
+                                                    ),
+                                                ),
                                             ),
                                         ],
                                     ),

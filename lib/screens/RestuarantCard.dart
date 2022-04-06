@@ -6,22 +6,27 @@ import 'package:geocode/geocode.dart';
 import 'package:geocoding/geocoding.dart';
 
 class RestaurantCard extends StatefulWidget {
-  RestaurantCard({Key? key, required this.name, required this.location, required this.places, required this.interested}) : super(key: key);
+  RestaurantCard({Key? key, required this.docRef,required this.timestamp,required this.name, required this.location, required this.places, required this.interested}) : super(key: key);
 
   String name;
   GeoPoint location ;
   int places;
   int interested;
+  Timestamp timestamp;
+  String docRef;
   @override
-  State<RestaurantCard> createState() => _RestaurantCardState(name : name, location: location, places: places, interested: interested);
+  State<RestaurantCard> createState() => _RestaurantCardState(docRef: docRef, timestamp: timestamp, name : name, location: location, places: places, interested: interested);
 }
 
 class _RestaurantCardState extends State<RestaurantCard> {
 
-  _RestaurantCardState({required this.name, required this.location, required this.places, required this.interested});
+  _RestaurantCardState({required this.timestamp, required this.docRef, required this.name, required this.location, required this.places, required this.interested});
 
   int places;
   int interested;
+  Timestamp timestamp;
+  String docRef;
+
 
   String name= "";
   GeoPoint location ;
@@ -36,7 +41,45 @@ class _RestaurantCardState extends State<RestaurantCard> {
     return "${address.streetAddress}, ${address.city}";
   }
 
-  bool expaned = false;
+  Future<String> _getName(String id) async {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+    String name = '';
+
+    await users.doc(id)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        name = documentSnapshot['name'];
+        print(name);
+      }else{
+        print('not found');
+      }
+    });
+
+    return name;
+  }
+
+  Future<String> _getType(String id) async {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+    bool name = false;
+
+    await users.doc(id)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        name = documentSnapshot['isOrg'];
+        print(name);
+      }else{
+        print('not found');
+      }
+    });
+
+    return name ? "Organisation" : "Individu";
+  }
+
+  bool expaned = true;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +87,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
       margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: !expaned ? BorderRadius.circular(30) : BorderRadius.circular(58),
+        borderRadius: !expaned ? BorderRadius.circular(20) : BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.4),
@@ -54,9 +97,35 @@ class _RestaurantCardState extends State<RestaurantCard> {
           )
         ],
       ),
-      padding: EdgeInsets.all(25),
+      padding: EdgeInsets.all(15),
       child: Column(
         children: [
+
+          Row(
+            children: [
+              Image.asset('assets/org.png'),
+              SizedBox(width: 10,),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FutureBuilder(future: _getName(docRef), initialData: "Chargement du nom...",
+                      builder: (BuildContext context, AsyncSnapshot<String> text){
+                        return Text(text.data==null ? "" : text.data!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),);
+                      }
+                  ),
+                  FutureBuilder(future: _getType(docRef), initialData: "Chargement du type...",
+                      builder: (BuildContext context, AsyncSnapshot<String> text){
+                        return Text(text.data==null ? "" : text.data!, style: TextStyle(fontSize: 14),);
+                      }
+                  ),
+                ],
+              ),
+
+            ],
+          ),
+
+          SizedBox(height: 15,),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children:  [
@@ -76,14 +145,14 @@ class _RestaurantCardState extends State<RestaurantCard> {
                     children: [
                       Container(
                         margin: EdgeInsets.all(10),
-                          child: Text(name, style: TextStyle(fontWeight: !expaned ? FontWeight.w500 : FontWeight.w700, fontSize: !expaned ? 20 : 22),)),
+                          child: Text(name, style: TextStyle(fontWeight: !expaned ? FontWeight.w500 : FontWeight.w700, fontSize: !expaned ? 20 : 25),)),
                     ],
                   ),
                 ],
               ),
 
 
-              IconButton(
+              /*IconButton(
                 onPressed: (){
                     setState(() {
                       expaned = !expaned;
@@ -91,7 +160,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
                 },
                 icon: Icon(expaned ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down), color: Colors.black,)
 
-
+*/
             ],
           ),
 
@@ -101,7 +170,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 10,),
+                  SizedBox(height: 5,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -109,9 +178,8 @@ class _RestaurantCardState extends State<RestaurantCard> {
                         children: [
                           Container(
                               padding: EdgeInsets.all(5),
-                              margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
                               decoration: BoxDecoration(
-                                  color: Color(0xFFFFEAEA),
+                                  color: Color(0xFFFFFFFF),
                                   borderRadius: BorderRadius.circular(100)
                               ),
                               child: Row(
@@ -120,11 +188,12 @@ class _RestaurantCardState extends State<RestaurantCard> {
                                 ],
                               )
                           ),
+                          SizedBox(width: 10,),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text('Adresse', style: TextStyle(color: Color(0xFF9D9D9D)),),
+                              //Text('Adresse', style: TextStyle(color: Color(0xFF9D9D9D)),),
                               FutureBuilder(future: _getAddress(location), initialData: "Chargement de l'adresse...",
                                   builder: (BuildContext context, AsyncSnapshot<String> text){
                                       return Text(text.data==null ? "" : text.data!);
@@ -137,7 +206,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
 
                     ],
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(height: 5,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -145,102 +214,69 @@ class _RestaurantCardState extends State<RestaurantCard> {
                         children: [
                           Container(
                               padding: EdgeInsets.all(5),
-                              margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
                               decoration: BoxDecoration(
-                                  color: Color(0xFFFFEAEA),
+                                  color: Color(0xFFFFFFFF),
                                   borderRadius: BorderRadius.circular(100)
                               ),
                               child: Row(
                                 children: [
-                                  Icon(Icons.fastfood_outlined, size: 25,color:Color(0xFFE32929),),
+                                  Icon(Icons.access_time, size: 25,color:Color(0xFFE32929),),
                                 ],
                               )
                           ),
+                          SizedBox(width: 10,),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text('Nombre de plats offerts', style: TextStyle(color: Color(0xFF9D9D9D)),),
-                              Text(places.toString()),
+                              //Text('Nombre de plats offerts', style: TextStyle(color: Color(0xFF9D9D9D)),),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Text(DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch).toString()),
+
+                                ],
+                              ),
                             ],
                           ),
+
                         ],
                       ),
 
-                    ],
-                  ),
-                  SizedBox(height: 10,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                              padding: EdgeInsets.all(5),
-                              margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      Container(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                            onPressed: (){},
+
+                            child: Container(
+
+
+                              padding: EdgeInsets.fromLTRB(15,5,10,5),
+
                               decoration: BoxDecoration(
-                                  color: Color(0xFFFFEAEA),
-                                  borderRadius: BorderRadius.circular(100)
+                                borderRadius: BorderRadius.circular(20),
+                                color: Color(0xFF757575),
                               ),
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.people_alt_outlined, size: 25,color:Color(0xFFE32929),),
+                                  Text("Détails", style: TextStyle(fontSize: 12, color: Colors.white),),
+                                  Icon(Icons.keyboard_arrow_right, color: Colors.white,)
                                 ],
-                              )
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text('Nombre de personnes interessées', style: TextStyle(color: Color(0xFF9D9D9D)),),
-                              Text(interested.toString()),
-
-                            ],
-                          ),
-                        ],
+                              ),
+                            )),
                       ),
 
                     ],
                   ),
+
 
                 ],
               )
             ],
           ),
 
-          !expaned ? SizedBox.shrink() : Column(
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
 
-                  Container(
-                    margin: EdgeInsets.fromLTRB(40, 20, 40, 0),
-                    child: TextButton(
-                        onPressed: (){},
-
-                        child: Container(
-
-                          padding: EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(35),
-                            color: Color(0xFFE32929),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text("Plus de détails", style: TextStyle(color: Colors.white),),
-                              Icon(Icons.keyboard_arrow_right, color: Colors.white,)
-                            ],
-                          ),
-                        )),
-                  )
-
-                ],
-              )
-            ],
-          ),
 
 
 

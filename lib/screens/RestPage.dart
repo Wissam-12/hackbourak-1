@@ -3,12 +3,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geocode/geocode.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hackbourak/Shared/SharedFunctions.dart';
 import 'package:hackbourak/screens/EventList.dart';
 import 'package:hackbourak/screens/Loading.dart';
+import 'package:hackbourak/screens/RestaurantSmallDetails.dart';
 import 'package:hackbourak/screens/RestuarantCard.dart';
+import 'package:hackbourak/screens/WelcomeScreen.dart';
 import 'package:location/location.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -25,6 +29,7 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
   late GoogleMapController _controller;
 
   PanelController _pc = new PanelController();
+
 
   String _mapStyle = "";
 
@@ -45,6 +50,16 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
   int markerInterested = 0;
   String markerName = "";
    bool markerClicked = false;
+
+  Future<String> _getAddress(GeoPoint g) async {
+    if (g.latitude == null || g.longitude == null) return "";
+    GeoCode geoCode = GeoCode();
+    Address address = await geoCode.reverseGeocoding(latitude: g.latitude, longitude: g.longitude);
+
+
+
+    return "${address.streetAddress}, ${address.city}";
+  }
 
 
   static const CameraPosition _kGooglePlex = CameraPosition(
@@ -150,7 +165,23 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
                   position: LatLng(data['location'].latitude,data['location'].longitude),
 
                   onTap: (){
+                    showMaterialModalBottomSheet(
 
+                      shape: RoundedRectangleBorder(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(24.0),
+                          topRight: Radius.circular(24.0),
+                        ),
+                      ),
+                      context: context,
+                      builder: (context) =>
+                          ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(24.0),
+                                topRight: Radius.circular(24.0),
+                              ),
+                              child: SizedBox(height : MediaQuery.of(context).size.height/100*40,child: RestaurantSmallDetails(docRef: data['owner'],name: data['name'], location: data['location'], places: data['places'], interested: data['interested']))),
+                    );
                   }
               )
           );
@@ -159,128 +190,143 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
 
         return Scaffold(
 
-          body: SlidingUpPanel(
-              controller: _pc,
-              minHeight: MediaQuery.of(context).size.height*12/100,
-              maxHeight: MediaQuery.of(context).size.height*90/100,
+            body: SlidingUpPanel(
+                controller: _pc,
+                minHeight: MediaQuery.of(context).size.height*12/100,
+                maxHeight: MediaQuery.of(context).size.height*90/100,
 
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(24.0),
-                topRight: Radius.circular(24.0),
-              ),
-
-            collapsed: Container(
-              color: Colors.white,
-              child: GestureDetector(
-                onTap: (){
-                  if (_pc.isPanelOpen){
-                    _pc.close();
-                  }else{
-                    _pc.open();
-                  }
-
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset('assets/swipe_indicator.png'),
-                    SizedBox(height: 15,),
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          //Icon(Icons.location_on_outlined, size: 35,color: Color(0xFFE32929)),
-                          Container(
-                              margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                              child: Text('A votre proximité', style: TextStyle(fontSize: 32, fontWeight: FontWeight.w500),)
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(24.0),
+                  topRight: Radius.circular(24.0),
                 ),
-              ),
-            ),
 
-              panel:
-                EventList(
-                    clickHandler: (){
+              collapsed: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(24.0),
+                  topRight: Radius.circular(24.0),
+                ),
+                child: Container(
+                  color: Colors.white,
+                  child: GestureDetector(
+                    onTap: (){
                       if (_pc.isPanelOpen){
                         _pc.close();
                       }else{
                         _pc.open();
                       }
+
                     },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset('assets/swipe_indicator.png'),
+                        SizedBox(height: 15,),
+                        Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              //Icon(Icons.location_on_outlined, size: 35,color: Color(0xFFE32929)),
+                              Container(
+                                  margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                  child: Text('A votre proximité', style: TextStyle(fontSize: 32, fontWeight: FontWeight.w500),)
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ),
-              body: rebuild ? Scaffold(
-                floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-                floatingActionButton: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
+              ),
 
-                      FloatingActionButton(
-                        onPressed: () async {
-                          SharedFunctions.showLoaderDialog(context);
-                          await FirebaseAuth.instance.signOut();
-                          Navigator.pop(context);
-                          },
-                        backgroundColor: Colors.white,
-                        child: Icon(Icons.logout, color: Color(0xFF424866),),
-                      ),
-                      SizedBox(height: 10,),
-                      FloatingActionButton(
-                        backgroundColor: Colors.white,
-                        onPressed: () {},
-                        child: Icon(Icons.add, color: Color(0xFF424866),),
-                      ),
-                      SizedBox(height: 10,),
-                      FloatingActionButton(
-                        onPressed: () {},
-                        backgroundColor: Colors.white,
-                        child: Icon(Icons.assistant_outlined, color: Color(0xFF424866),),
-                      ),
-                      SizedBox(height: 10,),
-                      FloatingActionButton(
-                        onPressed: () async {
-
-                          if (currentLoc != null){
-                            var l = currentLoc;
-                            _controller.animateCamera(
-                                CameraUpdate.newCameraPosition(
-                                  CameraPosition(
-                                      target: LatLng(l.latitude!, l.longitude!), zoom: 15),
-                                )
-                            );
+                panel:
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(24.0),
+                      topRight: Radius.circular(24.0),
+                    ),
+                    child: EventList(
+                        clickHandler: (){
+                          if (_pc.isPanelOpen){
+                            _pc.close();
+                          }else{
+                            _pc.open();
                           }
-
-
                         },
-                        backgroundColor: Colors.white,
-                        child: Icon(Icons.my_location, color: Color(0xFF424866)),
-                      )
-                    ],
+                    ),
                   ),
-                ),
-                body: GoogleMap(
+                body: rebuild ? Scaffold(
+                  floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+                  floatingActionButton: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
 
-                        mapType: MapType.normal,
-                        initialCameraPosition: _kGooglePlex,
-                        onMapCreated: _onMapCreated,
-                        myLocationButtonEnabled: false,
-                        myLocationEnabled: true,
-                        markers: markers,
-                      ),
-              ) : CircularProgressIndicator(),
+                        FloatingActionButton(
+                          onPressed: () async {
+                            SharedFunctions.showLoaderDialog(context);
+                            await FirebaseAuth.instance.signOut();
+                            Navigator.pop(context);
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>WelcomeScreen()));
+
+                            },
+                          backgroundColor: Colors.white,
+                          child: Icon(Icons.logout, color: Color(0xFF424866),),
+                        ),
+                        SizedBox(height: 10,),
+                        FloatingActionButton(
+                          backgroundColor: Colors.white,
+                          onPressed: () {},
+                          child: Icon(Icons.add, color: Color(0xFF424866),),
+                        ),
+                        SizedBox(height: 10,),
+                        FloatingActionButton(
+                          onPressed: () {},
+                          backgroundColor: Colors.white,
+                          child: Icon(Icons.assistant_outlined, color: Color(0xFF424866),),
+                        ),
+                        SizedBox(height: 10,),
+                        FloatingActionButton(
+                          onPressed: () async {
+
+                            if (currentLoc != null){
+                              var l = currentLoc;
+                              _controller.animateCamera(
+                                  CameraUpdate.newCameraPosition(
+                                    CameraPosition(
+                                        target: LatLng(l.latitude!, l.longitude!), zoom: 15),
+                                  )
+                              );
+                            }
+
+
+                          },
+                          backgroundColor: Colors.white,
+                          child: Icon(Icons.my_location, color: Color(0xFF424866)),
+                        )
+                      ],
+                    ),
                   ),
+                  body: GoogleMap(
+
+                          mapType: MapType.normal,
+                          initialCameraPosition: _kGooglePlex,
+                          onMapCreated: _onMapCreated,
+                          myLocationButtonEnabled: false,
+                          myLocationEnabled: true,
+                          markers: markers,
+                        ),
+                ) : CircularProgressIndicator(),
+                    ),
 
 
 
 
-        );
+          );
+
 
         return ListView(
           children: snapshot.data!.docs.map((DocumentSnapshot document) {

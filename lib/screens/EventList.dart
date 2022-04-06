@@ -74,8 +74,10 @@ class _EventListState extends State<EventList> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset('assets/swipe_indicator.png'),
-                          SizedBox(height: 15,),
+
+
+                          isEvents ? Image.asset('assets/swipe_indicator.png') : SizedBox.shrink(),
+                          isEvents ? SizedBox(height: 10,) : SizedBox.shrink(),
                           Container(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -88,7 +90,60 @@ class _EventListState extends State<EventList> {
                                 ),
                               ],
                             ),
-                          )
+                          ),
+                          isEvents ? SizedBox(height: 8,) : SizedBox.shrink(),
+                          !isEvents ? SizedBox(height: 15,): SizedBox.shrink(),
+
+                          !isEvents  ? Row(children: [
+                            Container(
+                              decoration : BoxDecoration(
+                                //border: Border.all(color: Color(0xFFC91C1C)),
+                                borderRadius: BorderRadius.circular(10),
+                                color: Color(0xFFFFEAEA)
+                              ),
+                              child: TextButton(
+                                child : Text('Tout', style: TextStyle(color: Color(0xFFC91C1C), fontSize: 12),),
+                                onPressed: (){},
+                              ),
+                            ),
+
+                            SizedBox(width: 10,),
+
+                            Container(
+                              decoration : BoxDecoration(
+                                border: Border.all(color: Color(0xFFC91C1C)),
+                                  borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: TextButton(
+                                child : Text('Livraison', style: TextStyle(color: Color(0xFFC91C1C), fontSize: 12)),
+                                onPressed: (){},
+                              ),
+                            ),
+
+                            SizedBox(width: 10,),
+                            Container(
+                              decoration : BoxDecoration(
+                                border: Border.all(color: Color(0xFFC91C1C)),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: TextButton(
+                                child : Text('Cuisine', style: TextStyle(color: Color(0xFFC91C1C), fontSize: 12)),
+                                onPressed: (){},
+                              ),
+                            ),
+                            SizedBox(width: 10,),
+                            Container(
+                              decoration : BoxDecoration(
+                                border: Border.all(color: Color(0xFFC91C1C)),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: TextButton(
+                                child : Text('Logistique', style: TextStyle(color: Color(0xFFC91C1C), fontSize: 12),),
+                                onPressed: (){},
+                              ),
+                            )
+                          ],) : SizedBox.shrink(),
+
                         ],
                       ),
                     ),

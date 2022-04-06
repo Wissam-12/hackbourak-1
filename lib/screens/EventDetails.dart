@@ -134,8 +134,8 @@ class _EventDetailsState extends State<EventDetails> {
           Container(
             decoration: const BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('assets/img/resto.png'),
-                    fit: BoxFit.fill)),
+                    image: AssetImage('assets/img/resto.jpg'),
+                    fit: BoxFit.fitHeight)),
             child: Column(
               children: [
                 Row(

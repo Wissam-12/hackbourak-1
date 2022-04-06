@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:geocode/geocode.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:hackbourak/screens/EventDetails.dart';
+import 'package:intl/intl.dart';
 
 class RestaurantCard extends StatefulWidget {
   RestaurantCard({Key? key, required this.eventRef, required this.docRef,required this.timestamp,required this.name, required this.location, required this.places, required this.interested}) : super(key: key);
@@ -76,7 +77,21 @@ class _RestaurantCardState extends State<RestaurantCard> {
         }
       });
     }else{
-      name = this.name;
+      if (coll=='users'){
+        await users.doc(id)
+            .get()
+            .then((DocumentSnapshot documentSnapshot) {
+          if (documentSnapshot.exists) {
+            name = documentSnapshot['name'];
+            print(name);
+          } else {
+            print('not found');
+          }
+        });
+      }else{
+        return this.name;
+      }
+
     }
     return name;
   }
@@ -228,7 +243,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
                               //Text('Adresse', style: TextStyle(color: Color(0xFF9D9D9D)),),
                               FutureBuilder(future: _getAddress(location), initialData: "Chargement de l'adresse...",
                                   builder: (BuildContext context, AsyncSnapshot<String> text){
-                                      return Text(text.data==null ? "" : text.data!);
+                                      return Text(text.data==null ? "" : text.data!, style: TextStyle(fontSize: 13),);
                                   }
                                   ),
                             ],
@@ -265,7 +280,13 @@ class _RestaurantCardState extends State<RestaurantCard> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
-                                  Text(DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch).toString()),
+                                  Text(
+                                    DateFormat.yMMMEd().format(
+                                      DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch))+" - "+
+                                        DateFormat('kk:mm').format(
+                                            DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch)),
+                                    style: TextStyle(fontSize: 13),
+                                  ),
 
                                 ],
                               ),

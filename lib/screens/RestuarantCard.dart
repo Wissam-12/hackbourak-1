@@ -150,12 +150,12 @@ class _RestaurantCardState extends State<RestaurantCard> {
                 children: [
                   FutureBuilder(future: _getName(docRef, 'users'), initialData: "Chargement du nom...",
                       builder: (BuildContext context, AsyncSnapshot<String> text){
-                        return Text(text.data==null ? "" : text.data!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w300),);
+                        return Text(text.data==null ? "" : text.data!, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w300),);
                       }
                   ),
                   FutureBuilder(future: _getType(docRef), initialData: "Chargement du type...",
                       builder: (BuildContext context, AsyncSnapshot<String> text){
-                        return Text(text.data==null ? "" : text.data!, style: TextStyle(fontSize: 14),);
+                        return Text(text.data==null ? "" : text.data!, style: TextStyle(fontSize: 13),);
                       }
                   ),
                 ],
@@ -189,7 +189,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
 
                           FutureBuilder(future: _getName(eventRef, 'restos'), initialData: "Chargement du nom...",
                               builder: (BuildContext context, AsyncSnapshot<String> text){
-                                return Text(text.data==null ? "" : text.data!, style: TextStyle(fontWeight: !expaned ? FontWeight.w500 : FontWeight.w700, fontSize: !expaned ? 20 : 25),);
+                                return Text(text.data==null ? "" : text.data!, style: TextStyle(fontWeight: !expaned ? FontWeight.w500 : FontWeight.w700, fontSize: 23),);
                               }
                           ),
                       ),

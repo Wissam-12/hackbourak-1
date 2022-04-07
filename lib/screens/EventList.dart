@@ -80,13 +80,13 @@ class _EventListState extends State<EventList> {
                           isEvents ? SizedBox(height: 10,) : SizedBox.shrink(),
                           Container(
                             child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 //Icon(Icons.location_on_outlined, size: 35,color: Color(0xFFE32929)),
                                 Container(
-                                    margin: EdgeInsets.fromLTRB(10, 10, 0, 0),
-                                    child: Text(isEvents ? 'A proximité de votre localisation' : 'Besoins', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),)
+                                    margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                    child: Text(isEvents ? 'A proximité de votre localisation' : 'Besoins', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),)
                                 ),
                               ],
                             ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import 'package:url_launcher/url_launcher.dart';
+
 class SharedFunctions {
 
   static void showingToast(String message) {
@@ -15,21 +17,27 @@ class SharedFunctions {
     );
   }
 
-    static showLoaderDialog(BuildContext context){
-      AlertDialog alert=AlertDialog(
+    static showLoaderDialog(BuildContext context) {
+      AlertDialog alert = AlertDialog(
         content: SizedBox(
-          height: 100,
+            height: 100,
             width: 100,
             child: Center(child: CircularProgressIndicator())),
       );
       showDialog(barrierDismissible: false,
-        context:context,
-        builder:(BuildContext context){
+        context: context,
+        builder: (BuildContext context) {
           return alert;
         },
       );
-
-  }
-
+    }
+      static Future<void> openMap(double latitude, double longitude) async {
+        String googleUrl = 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+        if (await canLaunch(googleUrl)) {
+          await launch(googleUrl);
+        } else {
+          throw 'Could not open the map.';
+        }
+      }
 
 }

@@ -4,6 +4,7 @@ import 'package:hackbourak/main.dart';
 import 'package:hackbourak/screens/InscriptionScreen.dart';
 import 'package:hackbourak/screens/Loading.dart';
 import 'package:hackbourak/screens/MapLoader.dart';
+import 'package:hackbourak/screens/PageParent.dart';
 import 'package:hackbourak/screens/RestPage.dart';
 import 'package:hackbourak/screens/Vousetes.dart';
 
@@ -50,7 +51,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         builder: (BuildContext context, userSnapshot) {
           if (userSnapshot.hasData){
             print("entered here");
-            return MapLoader();
+            return PageParent();
           }else{
             return Vousetes();
           }

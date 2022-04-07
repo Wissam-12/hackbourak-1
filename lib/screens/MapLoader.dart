@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hackbourak/screens/PageParent.dart';
 import 'package:hackbourak/screens/RestPage.dart';
 
 class MapLoader extends StatefulWidget {
@@ -19,7 +20,7 @@ class _MapLoaderState extends State<MapLoader> {
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (BuildContext context) => RestPage()
+              builder: (BuildContext context) => PageParent()
           )
       );
     });
@@ -40,7 +41,19 @@ class _MapLoaderState extends State<MapLoader> {
             image: AssetImage('assets/loading_bg.png'),
           ),
         ),
-        child: Center(child: CircularProgressIndicator(color: Colors.white,)),
+        child: Center(
+            child: GestureDetector(
+              child: CircularProgressIndicator(color: Colors.white,),
+              onTap: (){
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => PageParent()
+                    )
+                );
+              },
+            ),
+        ),
       ),
     );
   }

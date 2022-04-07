@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geocode/geocode.dart';
+import 'package:hackbourak/Shared/SharedFunctions.dart';
 
 class EventDetails extends StatefulWidget {
   EventDetails({Key? key, required this.docRef,required this.timestamp,required this.name, required this.location, required this.places, required this.interested}) : super(key: key);
@@ -109,7 +110,9 @@ class _EventDetailsState extends State<EventDetails> {
             ),
             FloatingActionButton.extended(
               backgroundColor: Color(0xFFFFEAEA),
-              onPressed: () {},
+              onPressed: () async {
+                await SharedFunctions.openMap(location.latitude,location.longitude);
+              },
               label: Container(
                   child: Row(
                 children: const [

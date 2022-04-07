@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hackbourak/screens/EventDetails.dart';
 import 'package:hackbourak/screens/Loading.dart';
 import 'package:hackbourak/SplashScreen.dart';
+import 'package:hackbourak/screens/PageParent.dart';
 
 import 'package:hackbourak/screens/RestPage.dart';
 
@@ -86,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (user != null) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => RestPage(),
+          builder: (context) => PageParent(),
         ),
       );
     }

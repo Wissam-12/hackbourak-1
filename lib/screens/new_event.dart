@@ -1,16 +1,25 @@
+import 'dart:ffi';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hackbourak/Shared/SharedFunctions.dart';
 import 'signin.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 class NewEventPage extends StatefulWidget {
-  NewEventPage({Key? key}) : super(key: key);
+  NewEventPage({Key? key, required this.moveCam}) : super(key: key);
 
+  VoidCallback moveCam;
   @override
-  State<NewEventPage> createState() => _NewEventPageState();
+  State<NewEventPage> createState() => _NewEventPageState(moveCam: moveCam);
 }
 
 class _NewEventPageState extends State<NewEventPage> {
+    _NewEventPageState({required this.moveCam});
+    VoidCallback moveCam;
     DateTime? _datee;
     TimeOfDay? _timee;
     String time = "Horaire";
@@ -22,6 +31,35 @@ class _NewEventPageState extends State<NewEventPage> {
   String date = "Add date  ";
   TextEditingController inputControler = new TextEditingController();
   GlobalKey<FormState> globalFormKey = new GlobalKey<FormState>();
+
+  void addEventDB() async{
+      await FirebaseFirestore.instance.collection('restos').add({
+          "besoins" : [],
+          "date" : eventDate,
+          "interested" : eventInterested,
+          "location" : eventLocation,
+          "name" : eventName,
+          "owner" : FirebaseAuth.instance.currentUser?.uid,
+          "places" : eventPlaces,
+
+      }).then((value) => {
+          SharedFunctions.showingToast("Evènement ajouté avec succès")
+          }
+  )
+          .catchError((error) => SharedFunctions.showingToast("Failed to add user: $error"));
+
+      moveCam();
+      Navigator.pop(context);
+  }
+  
+  String eventName="Event";
+  String eventDesc="";
+  String eventType="";
+  GeoPoint eventLocation=GeoPoint(36.666666, 3.3);
+  DateTime eventDate= DateTime(2022,4,8,19,25);
+  int eventPlaces = 5;
+  int eventInterested = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,6 +126,7 @@ class _NewEventPageState extends State<NewEventPage> {
                                                 padding: EdgeInsets.symmetric(vertical: 12, horizontal: 40,),
                                                 color: Colors.white,
                                                 child: new TextFormField(
+                                                    onChanged: (v){eventName=v;},
                                                     keyboardType: TextInputType.text,
                                                     style: TextStyle(
                                                         color: Color(0xFF1E1E1E),
@@ -123,6 +162,7 @@ class _NewEventPageState extends State<NewEventPage> {
                                                 padding: EdgeInsets.symmetric(vertical: 12, horizontal: 40,),
                                                 color: Colors.white,
                                                 child: new TextFormField(
+                                                    onChanged: (v){eventDesc=v;},
                                                     keyboardType: TextInputType.text,
                                                     style: TextStyle(
                                                         color: Color(0xFF1E1E1E),
@@ -416,7 +456,7 @@ class _NewEventPageState extends State<NewEventPage> {
                                                             vertical: 5,
                                                             horizontal: 50,
                                                         ),
-                                                        onPressed: () {},
+                                                        onPressed: addEventDB,
                                                         child: Text(
                                                             "Enregister",
                                                             style: TextStyle(

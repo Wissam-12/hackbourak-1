@@ -142,7 +142,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                         child: Container(
                                           padding: EdgeInsets.all(10),
                                           decoration: BoxDecoration(
-                                            color: Color(0xFFE32929),
+                                            color: Color(0xFF1AE4A6),
                                             borderRadius: BorderRadius.circular(20)
                                           ),
                                           child: Text('Accepter', style: TextStyle(color: Colors.white),),

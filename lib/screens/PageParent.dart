@@ -67,7 +67,7 @@ class _PageParentState extends State<PageParent> {
 
             BottomNavigationBarItem(
               icon: Icon(Icons.people),
-              label: 'Profile',
+              label: 'Profil',
             ),
           ],
           currentIndex: _selectedIndex,

@@ -74,6 +74,17 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
       tilt: 59.440717697143555,
       zoom: 19.151926040649414);
 
+
+  changeCameraPos(){
+    _controller.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+              target: LatLng(36.666666, 3.3), zoom: 15),
+        )
+    );
+
+  }
+
   void _onMapCreated(GoogleMapController _cntlr)
   {
 
@@ -284,7 +295,7 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
                         FloatingActionButton(
                           backgroundColor: Colors.white,
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>NewEventPage()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>NewEventPage(moveCam: changeCameraPos,)));
                           },
                           child: Icon(Icons.add, color: Color(0xFF424866),),
                         ),

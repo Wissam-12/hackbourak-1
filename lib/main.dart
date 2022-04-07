@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hackbourak/screens/EventDetails.dart';
 import 'package:hackbourak/screens/Loading.dart';
 import 'package:hackbourak/SplashScreen.dart';
+import 'package:hackbourak/screens/PopUp.dart';
 import 'package:hackbourak/screens/Profile.dart';
 
 import 'package:hackbourak/screens/RestPage.dart';
@@ -60,7 +61,7 @@ class MyApp extends StatelessWidget {
           ),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return Settings();
+              return PopUp();
             }
             return SplashScreen();
           },

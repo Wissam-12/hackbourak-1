@@ -22,7 +22,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -54,17 +53,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-       
-            headline1: TextStyle(fontSize: 22.0, color: Color(0xFFE32929),),
-            headline2: TextStyle(fontSize: 36.0,
-              fontWeight: FontWeight.w700,
-              color: Color(0xFF343434),),
-            bodyText1: TextStyle(fontSize: 14.0,
-              fontWeight: FontWeight.w400,
-              color: Color(0xFFE32929),),
-          ),
-        ),
-
         home: FutureBuilder(
           future: Firebase.initializeApp(
             options: DefaultFirebaseOptions.currentPlatform,
@@ -76,7 +64,6 @@ class MyApp extends StatelessWidget {
             return SplashScreen();
           },
         ));
-    );
   }
 }
 
@@ -110,7 +97,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return firebaseApp;
   }
 
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -122,6 +108,5 @@ class _MyHomePageState extends State<MyHomePage> {
         return SplashScreen();
       },
     );
-
   }
 }

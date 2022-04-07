@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hackbourak/screens/MapLoader.dart';
+import 'package:hackbourak/screens/NotificationsScreen.dart';
 import 'package:hackbourak/screens/RestPage.dart';
 import 'package:hackbourak/screens/UserProfilePage.dart';
 
@@ -18,10 +19,7 @@ class _PageParentState extends State<PageParent> {
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
 
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
+    NotificationsScreen(),
 
     RestPage(),
 

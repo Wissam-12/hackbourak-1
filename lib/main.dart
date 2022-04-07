@@ -56,9 +56,36 @@ class MyApp extends StatelessWidget {
           ),
         ),
 
+<<<<<<< HEAD
+        accentColor: Color(0xFFE32929),
+        textTheme: TextTheme(
+          headline1: TextStyle(fontSize: 22.0, color: Color(0xFFE32929),),
+          headline2: TextStyle(fontSize: 36.0, fontWeight: FontWeight.w700, color: Color(0xFF343434),),
+          bodyText1: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Color(0xFFE32929),),
+        ),
+<<<<<<< HEAD
+      ),
+      home: NewEventPage(),
 
+      home: FutureBuilder(
+        future: Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return WelcomeScreen();
+          }
+          return SplashScreen();
+        },
+      )
+=======
+      ),=
+=======
+
+>>>>>>> 78a423f9149dff1582216bc6ccb1489ed06f156a
 
         home: MyHomePage(title: 'hey',),
+>>>>>>> 6aa48723ae939492752eb21a01ee2c15ebd8a713
     );
 
   }

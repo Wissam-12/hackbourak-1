@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:hackbourak/Shared/SharedFunctions.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({Key? key}) : super(key: key);
@@ -138,7 +139,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                         ),
                                       ),
                                       TextButton(
-                                        onPressed: (){},
+                                        onPressed: (){
+
+                                          SharedFunctions.showPopup(context);
+
+                                        },
                                         child: Container(
                                           padding: EdgeInsets.all(10),
                                           decoration: BoxDecoration(

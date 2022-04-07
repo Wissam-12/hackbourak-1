@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hackbourak/screens/Profile.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({Key? key}) : super(key: key);
@@ -27,7 +28,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
         }
 
         var userDocument = snapshot.data;
-        return Text(userDocument!["name"]);
+        return Profile();
       },
     );
   }

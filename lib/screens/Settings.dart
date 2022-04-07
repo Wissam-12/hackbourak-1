@@ -36,7 +36,7 @@ class _SettingsState extends State<Settings> {
                   children: [
                     IconButton(
                         padding: EdgeInsets.zero,
-                        onPressed: () {},
+                        onPressed: () {Navigator.pop(context);},
                         icon: const Icon(
                           Icons.chevron_left,
                           color: Colors.black,

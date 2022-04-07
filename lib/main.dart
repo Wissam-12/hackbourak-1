@@ -4,12 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:hackbourak/screens/EventDetails.dart';
 import 'package:hackbourak/screens/Loading.dart';
 import 'package:hackbourak/SplashScreen.dart';
-<<<<<<< HEAD
 import 'package:hackbourak/screens/PopUp.dart';
 import 'package:hackbourak/screens/Profile.dart';
-=======
 import 'package:hackbourak/screens/PageParent.dart';
->>>>>>> e51cc165cd3695940e246df85bc65bc397f59cd3
 
 import 'package:hackbourak/screens/RestPage.dart';
 import 'package:hackbourak/screens/Settings.dart';
@@ -60,24 +57,11 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-<<<<<<< HEAD
-        home: FutureBuilder(
-          future: Firebase.initializeApp(
-            options: DefaultFirebaseOptions.currentPlatform,
-          ),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              return Loading();
-            }
-            return SplashScreen();
-          },
-        ));
-=======
+
 
         home: MyHomePage(title: 'hey',),
     );
 
->>>>>>> e51cc165cd3695940e246df85bc65bc397f59cd3
   }
 }
 

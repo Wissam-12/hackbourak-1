@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hackbourak/screens/PopUp.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
@@ -31,6 +32,26 @@ class SharedFunctions {
         },
       );
     }
+
+  static showPopup(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: ClipRRect(
+        borderRadius: BorderRadius.circular(40),
+        child: SizedBox(
+          width: 500,
+            height: 500,
+            child: PopUp()
+        ),
+      )
+    );
+    showDialog(barrierDismissible: true,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
       static Future<void> openMap(double latitude, double longitude) async {
         String googleUrl = 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
         if (await canLaunch(googleUrl)) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hackbourak/Shared/SharedFunctions.dart';
 import 'individu.dart';
 import 'connexion.dart';
 
@@ -11,6 +12,7 @@ class SigninPage extends StatefulWidget {
 
 class _SigninPageState extends State<SigninPage> {
   final scaffoldkey = GlobalKey<ScaffoldState>();
+  String _email = "";
   GlobalKey<FormState> globalFormKey = new GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -82,7 +84,7 @@ class _SigninPageState extends State<SigninPage> {
                                                 ),
                                             ),
                                             SizedBox(height: 10,),
-                                            new TextFormField(
+                                            TextFormField(
                                                 keyboardType: TextInputType.emailAddress,
                                                 // validator: (input) => input.isEmpty || !input.contains("@")
                                                 //     ? "enter a valid eamil"
@@ -106,6 +108,9 @@ class _SigninPageState extends State<SigninPage> {
                                                         borderRadius: BorderRadius.circular(23.5)
                                                     ),
                                                 ),
+                                                onChanged: (val){
+                                                    _email = val;
+                                                },
                                             ),
                                             SizedBox(height: 20,),
                                             FlatButton(
@@ -114,11 +119,18 @@ class _SigninPageState extends State<SigninPage> {
                                                     horizontal: 20,
                                                 ),
                                                 onPressed: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(builder: (context) => IndividInfo()
-                                                        ),
-                                                    );
+
+                                                    if (_email != ""){
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(builder: (context) => IndividInfo(email: _email,)
+                                                            ),
+                                                        );
+                                                    }else{
+                                                        SharedFunctions.showingToast("Veuillez entrer votre email.");
+                                                    }
+
+
                                                 },
                                                 child: Text("Suivant", style: TextStyle(fontSize: 18, color: Colors.white,),),
                                                 color: Theme.of(context).accentColor,

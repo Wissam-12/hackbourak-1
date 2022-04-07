@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hackbourak/screens/Loading.dart';
 import 'package:hackbourak/screens/WelcomeScreen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -13,10 +14,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-      body: Center(
-        child: Text('splash screen'),
-      ),
-    );
+    return Loading();
   }
 }

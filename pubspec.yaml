@@ -44,7 +44,13 @@ dependencies:
   sliding_up_panel: ^2.0.0+1
   geocoding: ^2.0.4
   geocode: ^1.0.1
+
+  image_picker: ^0.8.5
+
   modal_bottom_sheet: ^2.0.1
+
+  url_launcher: ^6.0.20
+
 
 dev_dependencies:
   flutter_test:
@@ -94,11 +100,11 @@ flutter:
       fonts:
         - asset: assets/fonts/Poppins-Bold.ttf
         - asset: assets/fonts/Poppins-Medium.ttf
-    # - family: Trajan Pro
-    #   fonts:
-    #     - asset: fonts/TrajanPro.ttf
-    #     - asset: fonts/TrajanPro_Bold.ttf
-    #       weight: 700
+    - family: DMSans
+      fonts:
+        - asset: assets/fonts/DMSans-Bold.ttf
+        - asset: assets/fonts/DMSans-Medium.ttf
+        - asset: assets/fonts/DMSans-Regular.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

@@ -78,9 +78,13 @@ class _IndividInfoState extends State<IndividInfo> {
                 SharedFunctions.showingToast('The account already exists for that email.');
                 print(e.code);
             }
+
+            Navigator.pop(context);
         } catch (e) {
             SharedFunctions.showingToast(e.toString());
             print(e);
+
+            Navigator.pop(context);
         }
     }
 

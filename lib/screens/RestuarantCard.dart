@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geocode/geocode.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:hackbourak/screens/EventDetails.dart';
+import 'package:intl/intl.dart';
 
 class RestaurantCard extends StatefulWidget {
-  RestaurantCard({Key? key, required this.docRef,required this.timestamp,required this.name, required this.location, required this.places, required this.interested}) : super(key: key);
+  RestaurantCard({Key? key, required this.eventRef, required this.docRef,required this.timestamp,required this.name, required this.location, required this.places, required this.interested}) : super(key: key);
 
   String name;
   GeoPoint location ;
@@ -14,15 +16,17 @@ class RestaurantCard extends StatefulWidget {
   int interested;
   Timestamp timestamp;
   String docRef;
+  String eventRef;
   @override
-  State<RestaurantCard> createState() => _RestaurantCardState(docRef: docRef, timestamp: timestamp, name : name, location: location, places: places, interested: interested);
+  State<RestaurantCard> createState() => _RestaurantCardState(eventRef : eventRef, docRef: docRef, timestamp: timestamp, name : name, location: location, places: places, interested: interested);
 }
 
 class _RestaurantCardState extends State<RestaurantCard> {
 
-  _RestaurantCardState({required this.timestamp, required this.docRef, required this.name, required this.location, required this.places, required this.interested});
+  _RestaurantCardState({required this.eventRef, required this.timestamp, required this.docRef, required this.name, required this.location, required this.places, required this.interested});
 
   int places;
+  String eventRef;
   int interested;
   Timestamp timestamp;
   String docRef;
@@ -34,6 +38,21 @@ class _RestaurantCardState extends State<RestaurantCard> {
   Future<String> _getAddress(GeoPoint g) async {
     if (g.latitude == null || g.longitude == null) return "";
     GeoCode geoCode = GeoCode();
+
+    if (eventRef!="") {
+      CollectionReference users = FirebaseFirestore.instance.collection(
+          'restos');
+      await users.doc(eventRef)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          g = documentSnapshot['location'];
+          print(g);
+        } else {
+          print('not found');
+        }
+      });
+    }
     Address address = await geoCode.reverseGeocoding(latitude: g.latitude, longitude: g.longitude);
 
 
@@ -41,22 +60,39 @@ class _RestaurantCardState extends State<RestaurantCard> {
     return "${address.streetAddress}, ${address.city}";
   }
 
-  Future<String> _getName(String id) async {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
+  Future<String> _getName(String id, String coll) async {
+    CollectionReference users = FirebaseFirestore.instance.collection(coll);
 
     String name = '';
 
-    await users.doc(id)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        name = documentSnapshot['name'];
-        print(name);
+    if (eventRef!="") {
+      await users.doc(id)
+          .get()
+          .then((DocumentSnapshot documentSnapshot) {
+        if (documentSnapshot.exists) {
+          name = documentSnapshot['name'];
+          print(name);
+        } else {
+          print('not found');
+        }
+      });
+    }else{
+      if (coll=='users'){
+        await users.doc(id)
+            .get()
+            .then((DocumentSnapshot documentSnapshot) {
+          if (documentSnapshot.exists) {
+            name = documentSnapshot['name'];
+            print(name);
+          } else {
+            print('not found');
+          }
+        });
       }else{
-        print('not found');
+        return this.name;
       }
-    });
 
+    }
     return name;
   }
 
@@ -103,19 +139,23 @@ class _RestaurantCardState extends State<RestaurantCard> {
 
           Row(
             children: [
-              Image.asset('assets/org.png'),
+              FutureBuilder(future: _getType(docRef), initialData: "Chargement du type...",
+                  builder: (BuildContext context, AsyncSnapshot<String> text){
+                    return Image.asset(text.data==null ? "assets/org.png" : (text.data! == "Individu" ? "assets/indiv.png" : "assets/org.png"));
+                  }
+              ),
               SizedBox(width: 10,),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  FutureBuilder(future: _getName(docRef), initialData: "Chargement du nom...",
+                  FutureBuilder(future: _getName(docRef, 'users'), initialData: "Chargement du nom...",
                       builder: (BuildContext context, AsyncSnapshot<String> text){
-                        return Text(text.data==null ? "" : text.data!, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),);
+                        return Text(text.data==null ? "" : text.data!, style: TextStyle(fontSize: 15, fontWeight: FontWeight.w300),);
                       }
                   ),
                   FutureBuilder(future: _getType(docRef), initialData: "Chargement du type...",
                       builder: (BuildContext context, AsyncSnapshot<String> text){
-                        return Text(text.data==null ? "" : text.data!, style: TextStyle(fontSize: 14),);
+                        return Text(text.data==null ? "" : text.data!, style: TextStyle(fontSize: 13),);
                       }
                   ),
                 ],
@@ -124,7 +164,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
             ],
           ),
 
-          SizedBox(height: 15,),
+          SizedBox(height: 5,),
 
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -145,7 +185,14 @@ class _RestaurantCardState extends State<RestaurantCard> {
                     children: [
                       Container(
                         margin: EdgeInsets.all(10),
-                          child: Text(name, style: TextStyle(fontWeight: !expaned ? FontWeight.w500 : FontWeight.w700, fontSize: !expaned ? 20 : 25),)),
+                          child:
+
+                          FutureBuilder(future: _getName(eventRef, 'restos'), initialData: "Chargement du nom...",
+                              builder: (BuildContext context, AsyncSnapshot<String> text){
+                                return Text(text.data==null ? "" : text.data!, style: TextStyle(fontWeight: !expaned ? FontWeight.w500 : FontWeight.w700, fontSize: 23),);
+                              }
+                          ),
+                      ),
                     ],
                   ),
                 ],
@@ -170,7 +217,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 5,),
+                  SizedBox(height: 2,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -196,7 +243,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
                               //Text('Adresse', style: TextStyle(color: Color(0xFF9D9D9D)),),
                               FutureBuilder(future: _getAddress(location), initialData: "Chargement de l'adresse...",
                                   builder: (BuildContext context, AsyncSnapshot<String> text){
-                                      return Text(text.data==null ? "" : text.data!);
+                                      return Text(text.data==null ? "" : text.data!, style: TextStyle(fontSize: 13),);
                                   }
                                   ),
                             ],
@@ -206,7 +253,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
 
                     ],
                   ),
-                  SizedBox(height: 5,),
+                  SizedBox(height: 2,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -233,7 +280,13 @@ class _RestaurantCardState extends State<RestaurantCard> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
-                                  Text(DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch).toString()),
+                                  Text(
+                                    DateFormat.yMMMEd().format(
+                                      DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch))+" - "+
+                                        DateFormat('kk:mm').format(
+                                            DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch)),
+                                    style: TextStyle(fontSize: 13),
+                                  ),
 
                                 ],
                               ),
@@ -246,7 +299,7 @@ class _RestaurantCardState extends State<RestaurantCard> {
                       Container(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                            onPressed: (){},
+                            onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>EventDetails(name: name, location: location, docRef: docRef, interested: interested, timestamp: timestamp, places: places,)));},
 
                             child: Container(
 

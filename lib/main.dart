@@ -4,8 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:hackbourak/screens/EventDetails.dart';
 import 'package:hackbourak/screens/Loading.dart';
 import 'package:hackbourak/SplashScreen.dart';
+<<<<<<< HEAD
 import 'package:hackbourak/screens/PopUp.dart';
 import 'package:hackbourak/screens/Profile.dart';
+=======
+import 'package:hackbourak/screens/PageParent.dart';
+>>>>>>> e51cc165cd3695940e246df85bc65bc397f59cd3
 
 import 'package:hackbourak/screens/RestPage.dart';
 import 'package:hackbourak/screens/Settings.dart';
@@ -16,6 +20,7 @@ import 'package:hackbourak/screens/WelcomeScreen.dart';
 import 'firebase_options.dart';
 import 'screens/signin.dart';
 import 'screens/organisation.dart';
+import 'screens/new_event.dart';
 
 void main() async {
   runApp(MyApp());
@@ -31,7 +36,7 @@ class MyApp extends StatelessWidget {
         title: 'Hackbourak',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          fontFamily: 'Product Sans',
+          fontFamily: 'Poppins',
           primaryColor: Colors.white,
           floatingActionButtonTheme: FloatingActionButtonThemeData(
             elevation: 0,
@@ -55,6 +60,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
+<<<<<<< HEAD
         home: FutureBuilder(
           future: Firebase.initializeApp(
             options: DefaultFirebaseOptions.currentPlatform,
@@ -66,6 +72,12 @@ class MyApp extends StatelessWidget {
             return SplashScreen();
           },
         ));
+=======
+
+        home: MyHomePage(title: 'hey',),
+    );
+
+>>>>>>> e51cc165cd3695940e246df85bc65bc397f59cd3
   }
 }
 
@@ -92,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (user != null) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => RestPage(),
+          builder: (context) => PageParent(),
         ),
       );
     }

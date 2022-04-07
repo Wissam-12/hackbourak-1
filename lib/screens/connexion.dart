@@ -31,6 +31,8 @@ class _ConnexionPageState extends State<ConnexionPage> {
                 print('Wrong password provided for that user.');
                 SharedFunctions.showingToast('Wrong password provided for that user.');
             }
+
+            Navigator.pop(context);
         }
     }
     String _email = "";

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hackbourak/screens/MapLoader.dart';
 import 'package:hackbourak/screens/RestPage.dart';
+import 'package:hackbourak/screens/UserProfilePage.dart';
 
 
 
@@ -24,16 +25,16 @@ class _PageParentState extends State<PageParent> {
 
     RestPage(),
 
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
+    UserProfilePage(),
   ];
 
   void _onItemTapped(int index) {
+
     setState(() {
       _selectedIndex = index;
     });
+
+
   }
 
   @override

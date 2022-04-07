@@ -147,9 +147,9 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
                     image: AssetImage('assets/loading_bg.png'),
                   ),
                 ),
-                child: Center(
-                    child : CircularProgressIndicator(color: Colors.white,),
-
+                child: Container(
+                  color: Color(0xFFe6e6e6),
+                    child: Center(child: CircularProgressIndicator(color: Color(0xFF9b5139),))
                 ),
               ),
           );
@@ -334,7 +334,9 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
                           myLocationEnabled: true,
                           markers: markers,
                         ),
-                ) : CircularProgressIndicator(),
+                ) : Container(
+                  color: Colors.white,
+                    child: CircularProgressIndicator()),
                     ),
 
 

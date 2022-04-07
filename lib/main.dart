@@ -47,9 +47,7 @@ class MyApp extends StatelessWidget {
           bodyText1: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w400, color: Color(0xFFE32929),),
         ),
       ),
-<<<<<<< HEAD
       home: NewEventPage(),
-=======
 
       home: FutureBuilder(
         future: Firebase.initializeApp(
@@ -62,7 +60,6 @@ class MyApp extends StatelessWidget {
           return SplashScreen();
         },
       )
->>>>>>> d2df36e935df27bbf29702eda0d69bd119fc92e2
     );
   }
 }

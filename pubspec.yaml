@@ -48,7 +48,11 @@ dependencies:
   image_picker: ^0.8.5
 =======
   modal_bottom_sheet: ^2.0.1
+<<<<<<< HEAD
 >>>>>>> 6aa48723ae939492752eb21a01ee2c15ebd8a713
+=======
+  url_launcher: ^6.0.20
+>>>>>>> 78a423f9149dff1582216bc6ccb1489ed06f156a
 
 dev_dependencies:
   flutter_test:

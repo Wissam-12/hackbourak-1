@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hackbourak/screens/EventDetails.dart';
 import 'package:hackbourak/screens/Loading.dart';
 import 'package:hackbourak/SplashScreen.dart';
+import 'package:hackbourak/screens/PageParent.dart';
 
 import 'package:hackbourak/screens/RestPage.dart';
 
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
 
+<<<<<<< HEAD
         accentColor: Color(0xFFE32929),
         textTheme: TextTheme(
           headline1: TextStyle(fontSize: 22.0, color: Color(0xFFE32929),),
@@ -78,6 +80,9 @@ class MyApp extends StatelessWidget {
       )
 =======
       ),=
+=======
+
+>>>>>>> 78a423f9149dff1582216bc6ccb1489ed06f156a
 
         home: MyHomePage(title: 'hey',),
 >>>>>>> 6aa48723ae939492752eb21a01ee2c15ebd8a713
@@ -109,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (user != null) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => RestPage(),
+          builder: (context) => PageParent(),
         ),
       );
     }

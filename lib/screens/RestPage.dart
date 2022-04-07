@@ -11,6 +11,7 @@ import 'package:hackbourak/screens/Loading.dart';
 import 'package:hackbourak/screens/RestaurantSmallDetails.dart';
 import 'package:hackbourak/screens/RestuarantCard.dart';
 import 'package:hackbourak/screens/WelcomeScreen.dart';
+import 'package:hackbourak/screens/new_event.dart';
 import 'package:location/location.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
@@ -146,9 +147,9 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
                     image: AssetImage('assets/loading_bg.png'),
                   ),
                 ),
-                child: Center(
-                    child : CircularProgressIndicator(color: Colors.white,),
-
+                child: Container(
+                  color: Color(0xFFe6e6e6),
+                    child: Center(child: CircularProgressIndicator(color: Color(0xFF9b5139),))
                 ),
               ),
           );
@@ -180,7 +181,7 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
                                 topLeft: Radius.circular(24.0),
                                 topRight: Radius.circular(24.0),
                               ),
-                              child: SizedBox(height : MediaQuery.of(context).size.height/100*40,child: RestaurantSmallDetails(timestamp: data['date'],docRef: data['owner'],name: data['name'], location: data['location'], places: data['places'], interested: data['interested']))),
+                              child: SizedBox(height : MediaQuery.of(context).size.height/100*45,child: RestaurantSmallDetails(timestamp: data['date'],docRef: data['owner'],name: data['name'], location: data['location'], places: data['places'], interested: data['interested']))),
                     );
                   }
               )
@@ -193,7 +194,7 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
             body: SlidingUpPanel(
                 controller: _pc,
                 minHeight: MediaQuery.of(context).size.height*12/100,
-                maxHeight: MediaQuery.of(context).size.height*94/100,
+                maxHeight: MediaQuery.of(context).size.height*85/100,
 
 
                 borderRadius: const BorderRadius.only(
@@ -230,7 +231,7 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
                               //Icon(Icons.location_on_outlined, size: 35,color: Color(0xFFE32929)),
                               Container(
                                   margin: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                  child: Text('A proximité de votre localisation', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),)
+                                  child: Text('A proximité de votre localisation', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),)
                               ),
                             ],
                           ),
@@ -282,7 +283,9 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
                         SizedBox(height: 10,),
                         FloatingActionButton(
                           backgroundColor: Colors.white,
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>NewEventPage()));
+                          },
                           child: Icon(Icons.add, color: Color(0xFF424866),),
                         ),
                         SizedBox(height: 10,),
@@ -331,7 +334,9 @@ class _RestPageState extends State<RestPage> with WidgetsBindingObserver  {
                           myLocationEnabled: true,
                           markers: markers,
                         ),
-                ) : CircularProgressIndicator(),
+                ) : Container(
+                  color: Colors.white,
+                    child: CircularProgressIndicator()),
                     ),
 
 

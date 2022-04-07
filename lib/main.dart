@@ -7,6 +7,7 @@ import 'package:hackbourak/SplashScreen.dart';
 import 'package:hackbourak/screens/Profile.dart';
 
 import 'package:hackbourak/screens/RestPage.dart';
+import 'package:hackbourak/screens/Settings.dart';
 
 import 'package:hackbourak/screens/Vousetes.dart';
 import 'package:hackbourak/screens/WelcomeScreen.dart';
@@ -59,7 +60,7 @@ class MyApp extends StatelessWidget {
           ),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return Profile();
+              return Settings();
             }
             return SplashScreen();
           },

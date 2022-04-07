@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
           ),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return PopUp();
+              return Loading();
             }
             return SplashScreen();
           },

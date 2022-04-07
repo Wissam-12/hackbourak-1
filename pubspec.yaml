@@ -44,6 +44,7 @@ dependencies:
   sliding_up_panel: ^2.0.0+1
   geocoding: ^2.0.4
   geocode: ^1.0.1
+  modal_bottom_sheet: ^2.0.1
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +74,9 @@ flutter:
     - assets/
     - assets/mapStyle.txt
     - assets/swipe_indicator.png
+    - assets/hand.png
+    - assets/org.png
+    - assets/indiv.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

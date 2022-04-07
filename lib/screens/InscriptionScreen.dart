@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hackbourak/screens/SignInScreen.dart';
+import 'package:hackbourak/screens/connexion.dart';
 import '../Shared/SharedFunctions.dart';
 
 import '../main.dart';
@@ -58,7 +58,7 @@ class _InscriptionScreenState extends State<InscriptionScreen> {
 
 
 
-    return isSignIn ? SignInScreen() : Scaffold(
+    return isSignIn ? ConnexionPage() : Scaffold(
       body: Container(
         child: Center(
           child: Column(

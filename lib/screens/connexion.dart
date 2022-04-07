@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../Shared/SharedFunctions.dart';
 
 class ConnexionPage extends StatefulWidget {
   ConnexionPage({Key? key}) : super(key: key);
@@ -8,7 +11,33 @@ class ConnexionPage extends StatefulWidget {
 }
 
 class _ConnexionPageState extends State<ConnexionPage> {
-  final scaffoldkey = GlobalKey<ScaffoldState>();
+
+    Future<void> _signInMailPassword() async {
+        try {
+            SharedFunctions.showLoaderDialog(context);
+
+            UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+                email: _email,
+                password: _password
+            );
+            Navigator.pop(context);
+            Navigator.pop(context);
+            Navigator.pop(context);
+        } on FirebaseAuthException catch (e) {
+            if (e.code == 'user-not-found') {
+                print('No user found for that email.');
+                SharedFunctions.showingToast('No user found for that email.');
+            } else if (e.code == 'wrong-password') {
+                print('Wrong password provided for that user.');
+                SharedFunctions.showingToast('Wrong password provided for that user.');
+            }
+        }
+    }
+    String _email = "";
+    String _password="";
+
+
+    final scaffoldkey = GlobalKey<ScaffoldState>();
   GlobalKey<FormState> globalFormKey = new GlobalKey<FormState>();
   bool hidePassword = true;
   @override
@@ -45,12 +74,12 @@ class _ConnexionPageState extends State<ConnexionPage> {
                                             SizedBox(
                                                 height: 80,
                                             ),
-                                            new TextFormField(
+                                            TextFormField(
                                                 keyboardType: TextInputType.emailAddress,
                                                 // validator: (input) => input.isEmpty || !input.contains("@")
                                                 //     ? "enter a valid eamil"
                                                 //     : null,
-                                                decoration: new InputDecoration(
+                                                decoration: InputDecoration(
                                                     hintText: "Adresse Email",
                                                     hintStyle: TextStyle(
                                                         fontSize: 16,
@@ -69,6 +98,9 @@ class _ConnexionPageState extends State<ConnexionPage> {
                                                         borderRadius: BorderRadius.circular(23.5)
                                                     ),
                                                 ),
+                                                onChanged: (value){
+                                                    _email = value;
+                                                },
                                             ),
                                             SizedBox(height: 10,),
                                             new TextFormField(
@@ -108,14 +140,13 @@ class _ConnexionPageState extends State<ConnexionPage> {
                                                         ),
                                                     ),
                                                 ),
+                                                onChanged: (value){
+                                                    _password = value;
+                                                },
                                             ),
                                             TextButton(
                                                 onPressed: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(builder: (context) => ConnexionPage()
-                                                        ),
-                                                    );
+
                                                 },
                                                 child: Text(
                                                     "Mot de passe oublié ?",
@@ -134,7 +165,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
                                                     vertical: 5,
                                                     horizontal: 20,
                                                 ),
-                                                onPressed: () {},
+                                                onPressed: () {_signInMailPassword();},
                                                 child: Text("Connextion", style: TextStyle(fontSize: 18, color: Colors.white,),),
                                                 color: Theme.of(context).accentColor,
                                                 shape: StadiumBorder(),

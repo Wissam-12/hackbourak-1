@@ -87,7 +87,7 @@ class _EventListState extends State<EventList> {
 
                     children: snapshot.data!.docs.map((DocumentSnapshot document) {
                       Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-                      return RestaurantCard(name: data['name'], location: data['location'],places: data['places'], interested: data['interested'],);
+                      return RestaurantCard(docRef: data['owner'] ,timestamp: data['date'],name: data['name'], location: data['location'],places: data['places'], interested: data['interested'],);
                     }).toList(),
                   ),
                 ),

@@ -1,16 +1,90 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../Shared/SharedFunctions.dart';
 import 'signin.dart';
 
 class IndividInfo extends StatefulWidget {
-  IndividInfo({Key? key}) : super(key: key);
-
+  IndividInfo({Key? key, required this.email}) : super(key: key);
+String email;
   @override
-  State<IndividInfo> createState() => _IndividInfoState();
+  State<IndividInfo> createState() => _IndividInfoState(email: email);
 }
 
 class _IndividInfoState extends State<IndividInfo> {
+    _IndividInfoState({required this.email});
   final scaffoldkey = GlobalKey<ScaffoldState>();
   GlobalKey<FormState> globalFormKey = new GlobalKey<FormState>();
+
+  String email;
+  String _password1="";
+  String _password2="";
+  String _name="";
+  String _prenom="";
+  int _year=0;
+  int _number=0;
+
+    Future<void> _signUpMailPassword() async {
+        try {
+
+            if (_password1 != _password2){
+                SharedFunctions.showingToast("Mots de passe non pas identiques");
+            }else{
+                if (_name==""){
+                    SharedFunctions.showingToast("Veuillez entrer votre nom");
+                }else{
+                    if (_prenom==""){
+                        SharedFunctions.showingToast("Veuillez entre votre prenom");
+                    }else{
+                        if (_year>2014 && _year<1900){
+                            SharedFunctions.showingToast("Veuillez entrer une année valide");
+                        }else{
+                            if (_number == 0){
+                                SharedFunctions.showingToast("Veuillez entrer votre numero de telephone");
+                            }else{
+                                SharedFunctions.showLoaderDialog(context);
+
+                                UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                                    email: email,
+                                    password: _password1
+                                );
+
+                                FirebaseFirestore.instance.collection("users").doc(userCredential.user?.uid).set({
+                                    'password': _password1,
+                                    'name' : _name,
+                                    'prenom' : _prenom,
+                                    'phone' : _number,
+                                    'year' : _year,
+                                    'email' : email,
+                                    'isOrg' : false,
+                                });
+
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
+        } on FirebaseAuthException catch (e) {
+            if (e.code == 'weak-password') {
+                SharedFunctions.showingToast('The password provided is too weak.');
+                print(e.code);
+            } else if (e.code == 'email-already-in-use') {
+                SharedFunctions.showingToast('The account already exists for that email.');
+                print(e.code);
+            }
+        } catch (e) {
+            SharedFunctions.showingToast(e.toString());
+            print(e);
+        }
+    }
+
+
   bool hidePassword = true;
   bool hidep = true;
   bool checked = false;
@@ -72,6 +146,7 @@ class _IndividInfoState extends State<IndividInfo> {
                                                         borderRadius: BorderRadius.circular(23.5)
                                                     ),
                                                 ),
+                                                onChanged: (val){_name = val;},
                                             ),
                                             SizedBox(height: 10,),
                                             new TextFormField(
@@ -98,12 +173,13 @@ class _IndividInfoState extends State<IndividInfo> {
                                                         borderRadius: BorderRadius.circular(23.5)
                                                     ),
                                                 ),
+                                                onChanged: (val){_prenom = val;},
                                             ),
                                             SizedBox(height: 10,),
                                             new TextFormField(
                                                 keyboardType: TextInputType.number,
                                                 decoration: new InputDecoration(
-                                                    hintText: "Date de Naissance",
+                                                    hintText: "Année de Naissance",
                                                     hintStyle: TextStyle(
                                                         fontSize: 16,
                                                         fontFamily: 'Poppins',
@@ -121,6 +197,7 @@ class _IndividInfoState extends State<IndividInfo> {
                                                         borderRadius: BorderRadius.circular(23.5)
                                                     ),
                                                 ),
+                                                onChanged: (val){_year = int.parse(val);},
                                             ),
                                             SizedBox(height: 10,),
                                             new TextFormField(
@@ -144,6 +221,7 @@ class _IndividInfoState extends State<IndividInfo> {
                                                         borderRadius: BorderRadius.circular(23.5)
                                                     ),
                                                 ),
+                                                onChanged: (val){_number = int.parse(val);},
                                             ),
                                             SizedBox(height: 10,),
                                             new TextFormField(
@@ -183,6 +261,7 @@ class _IndividInfoState extends State<IndividInfo> {
                                                         ),
                                                     ),
                                                 ),
+                                                onChanged: (val){_password1 = val;},
                                             ),
                                             SizedBox(height: 10,),
                                             new TextFormField(
@@ -192,7 +271,7 @@ class _IndividInfoState extends State<IndividInfo> {
                                                 //     : null,
                                                 obscureText: hidep,
                                                 decoration: new InputDecoration(
-                                                    hintText: "Mot de passe",
+                                                    hintText: "Confirmer le mot de passe",
                                                     hintStyle: TextStyle(
                                                         fontSize: 16,
                                                         fontFamily: 'Poppins',
@@ -222,6 +301,7 @@ class _IndividInfoState extends State<IndividInfo> {
                                                         ),
                                                     ),
                                                 ),
+                                                onChanged: (val){_password2 = val;},
                                             ),
                                             SizedBox(height: 10,),
                                             Container(
@@ -257,11 +337,7 @@ class _IndividInfoState extends State<IndividInfo> {
                                                     horizontal: 20,
                                                 ),
                                                 onPressed: checked ? () {
-                                                    // Navigator.push(
-                                                    //     context,
-                                                    //     MaterialPageRoute(builder: (context) => SigninPage()
-                                                    //     ),
-                                                    // );
+                                                    _signUpMailPassword();
                                                 } : null,
                                                 child: Text(
                                                     "Inscription",
